@@ -6,7 +6,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 
-BETWEEN_LAYER_BUFFER = 1
+BETWEEN_LAYER_BUFFER = 5 #to change
 verticies_graph_fragment = { 0 : GraphFragment([], [Vertice(0, 0, 0)], -1, [], Vertice(0, 0, 0)) }
 graph_fragment_list = [GraphFragment([], [Vertice(0, 0, 0)], -1, [], Vertice(0, 0, 0))]
 inter_layer_connections = []
@@ -21,10 +21,10 @@ def resolve_column_for_square(square):
     return square.field_id % divider
 
 def resolve_upper_left_lower_layer_square_id(square_row, square_column, square):
-    return square_row * (2**(square.layer_number + 1)) + (square_column * 2)
+    return square_row * (2**(square.layer_number + 2)) + (square_column * 2)
 
 def resolve_lower_left_lower_layer_square_id(square_row, square_column, square):
-    return (square_row * (2**(square.layer_number + 1)) + (square_column * 2)) + (2**(square.layer_number + 1))
+    return (square_row * (2**(square.layer_number + 2)) + (square_column * 2)) + (2**(square.layer_number + 1))
 
 def append_generated_lower_layer_squares(square, lower_layer_squares):
     lower_square_layer = square.layer_number + 1
@@ -54,8 +54,8 @@ def resolve_verticies_coordinates_for_square(square):
     acc -= breaks
     square_row = resolve_row_for_square(square)
     square_column = resolve_column_for_square(square)
-    y_upper_left_vertice = acc - square_row - (square_row // 2)  # * BREAK_FACTOR
-    x_upper_left_vertice = square_column + (square_column // 2)  # * BREAK_FACTOR
+    y_upper_left_vertice = acc - square_row - (square_row // 2)
+    x_upper_left_vertice = square_column + (square_column // 2)
     square.verticies.append(Vertice(x_upper_left_vertice, y_upper_left_vertice, graph_verticies_id_counter))
     graph_verticies_id_counter += 1
     square.verticies.append(Vertice(x_upper_left_vertice + 1, y_upper_left_vertice, graph_verticies_id_counter))
@@ -80,7 +80,7 @@ def resolve_lower_layer_squares(graph_fragment):
         resolve_verticies_coordinates_for_square(square)
     return lower_layer_squares
 
-def P1_find_lower_left_vertice(lower_layer_squares):
+def find_lower_left_vertice(lower_layer_squares):
     min_square_vertice = None
     for square in lower_layer_squares:
         for vertice in square.verticies:
@@ -88,7 +88,7 @@ def P1_find_lower_left_vertice(lower_layer_squares):
                 min_square_vertice = vertice
     return min_square_vertice
 
-def P1_find_vertice_with_coordinates_and_remove_duplicates(x, y, lower_layer_squares):
+def find_vertice_with_coordinates_and_remove_duplicates(x, y, lower_layer_squares):
     result_vertice = None
     verticies_to_delete = []
     for square in lower_layer_squares:
@@ -108,7 +108,7 @@ def P1_find_vertice_with_coordinates_and_remove_duplicates(x, y, lower_layer_squ
 def P1(id):
     graph_fragment = verticies_graph_fragment.get(id)
     lower_layer_squares = resolve_lower_layer_squares(graph_fragment)
-    lower_left_vertice = P1_find_lower_left_vertice(lower_layer_squares)
+    lower_left_vertice = find_lower_left_vertice(lower_layer_squares)
     lower_graph_fragment_width = math.sqrt(len(lower_layer_squares))
     lower_right_x = lower_left_vertice.x + lower_graph_fragment_width
     lower_right_y = lower_left_vertice.y
@@ -117,24 +117,25 @@ def P1(id):
     upper_right_x = lower_right_x
     upper_right_y = upper_left_y
     middle_x = lower_left_vertice.x + (lower_graph_fragment_width / 2)
-    middle_y = lower_left_vertice.y + (lower_graph_fragment_width / 2) # to check
-    lower_right_vertice = P1_find_vertice_with_coordinates_and_remove_duplicates(lower_right_x, lower_right_y, lower_layer_squares)
-    upper_left_vertice = P1_find_vertice_with_coordinates_and_remove_duplicates(upper_left_x, upper_left_y, lower_layer_squares)
-    upper_right_vertice = P1_find_vertice_with_coordinates_and_remove_duplicates(upper_right_x, upper_right_y, lower_layer_squares)
-    middle_vertice = P1_find_vertice_with_coordinates_and_remove_duplicates(middle_x, middle_y, lower_layer_squares)
+    middle_y = lower_left_vertice.y + (lower_graph_fragment_width / 2)
+    lower_right_vertice = find_vertice_with_coordinates_and_remove_duplicates(lower_right_x, lower_right_y,
+                                                                              lower_layer_squares)
+    upper_left_vertice = find_vertice_with_coordinates_and_remove_duplicates(upper_left_x, upper_left_y,
+                                                                             lower_layer_squares)
+    upper_right_vertice = find_vertice_with_coordinates_and_remove_duplicates(upper_right_x, upper_right_y,
+                                                                              lower_layer_squares)
+    middle_vertice = find_vertice_with_coordinates_and_remove_duplicates(middle_x, middle_y, lower_layer_squares)
     edges = [(upper_left_vertice.id, lower_left_vertice.id), (upper_left_vertice.id, upper_right_vertice.id), (upper_left_vertice.id, middle_vertice.id),
      (lower_left_vertice.id, lower_right_vertice.id), (lower_left_vertice.id, middle_vertice.id), (lower_right_vertice.id, middle_vertice.id),
      (lower_right_vertice.id, upper_right_vertice.id), (upper_right_vertice.id, middle_vertice.id)]
-    new_fragment = (GraphFragment(lower_layer_squares, [lower_left_vertice, lower_right_vertice, upper_left_vertice, upper_right_vertice, middle_vertice], graph_fragment.layer_number + 1, edges, [middle_vertice]))
+    new_fragment = GraphFragment(lower_layer_squares, [lower_left_vertice, lower_right_vertice, upper_left_vertice, upper_right_vertice, middle_vertice], graph_fragment.layer_number + 1, edges, [middle_vertice])
     verticies_graph_fragment.pop(id, None)
     verticies_graph_fragment[middle_vertice.id] = new_fragment
     graph_fragment_list.append(new_fragment)
     inter_layer_connections.append((middle_vertice.id, id))
 
 P1(0)
-P1(5)
-P1(9)
-P1(44)
+P2(5)
 G = nx.Graph()
 for graph_fragment in graph_fragment_list:
     for vertice in graph_fragment.verticies:
@@ -148,7 +149,7 @@ pos = {}
 for graph_fragment in graph_fragment_list:
     for vertice in graph_fragment.verticies:
         pos[vertice.id] = (vertice.x, vertice.y)
-nx.draw_networkx(G, pos, node_color='lightblue')
+nx.draw_networkx(G, pos, node_color='lightblue')#, node_size = 10, font_size=1)
 ax = plt.gca()
 plt.axis("off")
 plt.show()

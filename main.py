@@ -6,7 +6,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 
-BETWEEN_LAYER_BUFFER = 5 #to change
+BETWEEN_LAYER_BUFFER = 1 #to change
 verticies_graph_fragment = { 0 : GraphFragment([], [Vertice(0, 0, 0)], -1, [], Vertice(0, 0, 0)) }
 graph_fragment_list = [GraphFragment([], [Vertice(0, 0, 0)], -1, [], Vertice(0, 0, 0))]
 inter_layer_connections = []
@@ -136,6 +136,12 @@ def P1(id):
 
 P1(0)
 P2(5)
+P2(15)
+P2(10)
+P1(25)
+P2(20)
+P2(45)
+P2(69)
 G = nx.Graph()
 for graph_fragment in graph_fragment_list:
     for vertice in graph_fragment.verticies:

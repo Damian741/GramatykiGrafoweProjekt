@@ -1,7 +1,7 @@
 # Projekt Siatka Czworokątna 1
 
 ## 1. Graph generation
-To generate a graph visually you need to define which productions you want to use on which vertices.
+To generate a graph visually you need to define which productions you want to use on which vertices in main.py.
 The first vertice has id = 0. The rest you need to specify by invoking the program and checking generated graph ids.
 
 ## 2. Iterating over the graph

@@ -1,8 +1,11 @@
 import math
 from common import *
 from VerticeLabel import VerticeLabel
+from SortUtils import sort_graph_fragments
 
 def P1(id):
+    global verticies_graph_fragment
+    global graph_fragment_list
     graph_fragment = verticies_graph_fragment.get(id)
     lower_layer_squares = resolve_lower_layer_squares(graph_fragment)
     lower_left_vertice = find_lower_left_vertice(lower_layer_squares)
@@ -33,3 +36,6 @@ def P1(id):
     inter_layer_connections.append((middle_vertice.id, id))
     set_labels_in_graph_fragment(new_fragment)
     graph_fragment.middle_vertice.label = VerticeLabel.i
+    sorted_graph_fragment_list = sort_graph_fragments(graph_fragment_list)
+    graph_fragment_list.clear()
+    graph_fragment_list.extend(sorted_graph_fragment_list)

@@ -21,17 +21,31 @@ verticies_graph_fragment = {0: _start_fragment}
 graph_fragment_list = [_start_fragment]
 inter_layer_connections = []
 
+"""
+Function which returns row for given single square
+"""
 def _resolve_row_for_square(square):
     divider = 2 ** square.layer_number
     return square.field_id // divider
 
+
+"""
+Function which returns column for given single square
+"""
 def _resolve_column_for_square(square):
     divider = 2 ** square.layer_number
     return square.field_id % divider
 
-def _resolve_upper_left_lower_layer_square_id(square_row, square_column, square):
-    return square_row * (2**(square.layer_number + 2)) + (square_column * 2)
 
+"""
+Function which returns ID of upper left square on the lower layer 
+"""
+def _resolve_upper_left_lower_layer_square_id(square_row, square_column, square):
+    return square_row * (2 ** (square.layer_number + 2)) + (square_column * 2)
+
+"""
+Function which returns ID of lower left square on the lower layer 
+"""
 def _resolve_lower_left_lower_layer_square_id(square_row, square_column, square):
     return (square_row * (2 ** (square.layer_number + 2)) + (square_column * 2)) + (2 ** (square.layer_number + 1))
 

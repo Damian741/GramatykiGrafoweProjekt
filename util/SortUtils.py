@@ -1,3 +1,8 @@
+"""
+Function for sorting graph_fragment_list by level, y and x
+"""
+
+
 def sort_graph_fragments(graph_fragment_list):
     graph_fragment_list = _sort_by_level(graph_fragment_list)
     graph_fragment_list = _sort_by_y(graph_fragment_list)
@@ -5,10 +10,19 @@ def sort_graph_fragments(graph_fragment_list):
     return graph_fragment_list
 
 
+"""
+Function for sorting graph_fragment_list by level
+"""
+
+
 def _sort_by_level(graph_fragment_list):
     graph_fragment_list.sort(key=lambda x: x.layer_number)
     return graph_fragment_list
 
+
+"""
+Function for sorting graph_fragment_list by y
+"""
 
 
 def _sort_by_y(graph_fragment_list):
@@ -27,6 +41,12 @@ def _sort_by_y(graph_fragment_list):
     graph_fragments_same_level.sort(key=lambda x: x.middle_vertice.y, reverse=True)
     sorted_graph_fragment_list.extend(graph_fragments_same_level)
     return sorted_graph_fragment_list
+
+
+"""
+Function for sorting graph_fragment_list by level, y and x
+"""
+
 
 def _sort_by_x(graph_fragment_list):
     sorted_graph_fragment_list = []

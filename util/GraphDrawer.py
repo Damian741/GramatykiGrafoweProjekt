@@ -10,6 +10,10 @@ label_color_map = {
 }
 color_list = []
 
+"""
+Function for drawing graphs
+"""
+
 
 def draw_graph():
     global color_list

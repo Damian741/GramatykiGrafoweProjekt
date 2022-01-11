@@ -3,7 +3,7 @@ from data.VertexLabel import VertexLabel
 from util.SortUtils import sort_graph_fragments
 
 
-def P8(id1, id2, id3, id4):
+def P7(id1, id2, id3, id4):
     global verticies_graph_fragment
     global graph_fragment_list
     graph_fragment_upper_left = verticies_graph_fragment.get(id1)
@@ -18,8 +18,8 @@ def P8(id1, id2, id3, id4):
     for v in graph_fragment_upper_left.vertices:
         print(v.x, v.y, v.id)
 
-    #top_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_left)
-    #bottom_left_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_left)
+    top_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_left)
+    bottom_left_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_left)
     
     top_middle_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_right)
     bottom_middle_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_right)
@@ -27,7 +27,7 @@ def P8(id1, id2, id3, id4):
     top_right_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_right)
     bottom_right_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_lower_right)
 
-    #merge_verticies_to_upper(top_left_vertex, bottom_left_vertex, graph_fragment_lower_left)
+    merge_verticies_to_upper(top_left_vertex, bottom_left_vertex, graph_fragment_lower_left)
     merge_verticies_to_upper(top_right_vertex, bottom_right_vertex, graph_fragment_lower_right)
     merge_verticies_to_upper(top_middle_vertex, bottom_middle_vertex, graph_fragment_lower_left)
 

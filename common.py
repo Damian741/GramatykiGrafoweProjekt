@@ -20,6 +20,7 @@ _start_fragment = GraphFragment([], [_start_vertice], -1, [], _start_vertice)
 verticies_graph_fragment = {0: _start_fragment}
 graph_fragment_list = [_start_fragment]
 inter_layer_connections = []
+MAX_INT = 4097
 
 """
 Function which returns row for given single square
@@ -172,3 +173,28 @@ def set_labels_in_graph_fragment(graph_fragment):
     for vertice in graph_fragment.verticies:
         vertice.label = VerticeLabel.E
     graph_fragment.middle_vertice.label = VerticeLabel.I
+
+
+def get_lower_left_vertice_in_graph_fragment(verticies):
+    min_x = MAX_INT
+    min_y = 0
+    for v in verticies:
+        if v.x < min_x:
+            min_x = v.x
+        if v.y < min_y:
+            min_y = v.y
+    for v in verticies:
+        if v.x == min_x and v.y == min_y:
+            return v
+
+def get_upper_left_vertice_in_graph_fragment(verticies):
+    min_x = MAX_INT
+    max_y = -MAX_INT
+    for v in verticies:
+        if v.x < min_x:
+            min_x = v.x
+        if v.y > max_y:
+            max_y = v.y
+    for v in verticies:
+        if v.x == min_x and v.y == max_y:
+            return v

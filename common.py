@@ -176,49 +176,24 @@ def set_labels_in_graph_fragment(graph_fragment: GraphFragment):
 
 
 def get_lower_left_vertice_in_graph_fragment(graph_fragment: GraphFragment) -> Vertex:
-    min_x = MAX_INT
-    min_y = 0
     for v in graph_fragment.vertices:
-        if v.x < min_x:
-            min_x = v.x
-        if v.y < min_y:
-            min_y = v.y
-    for v in graph_fragment.vertices:
-        if v.x == min_x and v.y == min_y:
+        if v.x < graph_fragment.middle_vertex.x and v.y < graph_fragment.middle_vertex.y:
             return v
+
 
 def get_lower_right_vertice_in_graph_fragment(graph_fragment: GraphFragment) -> Vertex:
-    max_x = 0
-    min_y = 0
     for v in graph_fragment.vertices:
-        if v.x > max_x:
-            max_x = v.x
-        if v.y < min_y:
-            min_y = v.y
-    for v in graph_fragment.vertices:
-        if v.x == max_x and v.y == min_y:
+        if v.x > graph_fragment.middle_vertex.x and v.y < graph_fragment.middle_vertex.y:
             return v
+
 
 def get_upper_left_vertice_in_graph_fragment(graph_fragment: GraphFragment) -> Vertex:
-    min_x = MAX_INT
-    max_y = -MAX_INT
     for v in graph_fragment.vertices:
-        if v.x < min_x:
-            min_x = v.x
-        if v.y > max_y:
-            max_y = v.y
-    for v in graph_fragment.vertices:
-        if v.x == min_x and v.y == max_y:
+        if v.y > graph_fragment.middle_vertex.y and v.x < graph_fragment.middle_vertex.x:
             return v
 
+
 def get_upper_right_vertice_in_graph_fragment(graph_fragment: GraphFragment) -> Vertex:
-    max_x = 0
-    max_y = -MAX_INT
     for v in graph_fragment.vertices:
-        if v.x > max_x:
-            max_x = v.x
-        if v.y > max_y:
-            max_y = v.y
-    for v in graph_fragment.vertices:
-        if v.x == max_x and v.y == max_y:
+        if v.x > graph_fragment.middle_vertex.x and v.y > graph_fragment.middle_vertex.y:
             return v

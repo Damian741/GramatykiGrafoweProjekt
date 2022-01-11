@@ -1,10 +1,10 @@
 from enum import Enum
 
 """
-Enum representing the vertice label
-E - an "edge" vertice from which you cannot make any lower part of the graph
-I - a middle vertice from which you can make a lower part of the graph
-i - a middle vertice from which you cannot make a lower part of the graph as it has already been built
+Enum representing the vertex label
+E - an "edge" vertex from which you cannot make any lower part of the graph
+I - a middle vertex from which you can make a lower part of the graph
+i - a middle vertex from which you cannot make a lower part of the graph as it has already been built
 """
 
 

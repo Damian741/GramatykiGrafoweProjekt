@@ -87,19 +87,19 @@ def _resolve_verticies_coordinates_for_square(square):
     square_column = _resolve_column_for_square(square)
     y_upper_left_vertice = acc - square_row - (square_row // 2)
     x_upper_left_vertice = square_column + (square_column // 2)
-    square.verticies.append(
+    square.vertices.append(
         Vertex(x_upper_left_vertice, y_upper_left_vertice, _graph_verticies_id_counter, VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
-    square.verticies.append(
+    square.vertices.append(
         Vertex(x_upper_left_vertice + 1, y_upper_left_vertice, _graph_verticies_id_counter, VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
-    square.verticies.append(
+    square.vertices.append(
         Vertex(x_upper_left_vertice, y_upper_left_vertice - 1, _graph_verticies_id_counter, VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
-    square.verticies.append(Vertex(x_upper_left_vertice + 1, y_upper_left_vertice - 1, _graph_verticies_id_counter,
+    square.vertices.append(Vertex(x_upper_left_vertice + 1, y_upper_left_vertice - 1, _graph_verticies_id_counter,
                                     VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
-    square.verticies.append(Vertex(x_upper_left_vertice + 0.5, y_upper_left_vertice - 0.5, _graph_verticies_id_counter,
+    square.vertices.append(Vertex(x_upper_left_vertice + 0.5, y_upper_left_vertice - 0.5, _graph_verticies_id_counter,
                                     VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
 
@@ -125,7 +125,7 @@ Function which returns lower left vertice from lower_layer_squares list
 def find_lower_left_vertice(lower_layer_squares):
     min_square_vertice = None
     for square in lower_layer_squares:
-        for vertice in square.verticies:
+        for vertice in square.vertices:
             if min_square_vertice is None or min_square_vertice.x > vertice.x or min_square_vertice.y > vertice.y:
                 min_square_vertice = vertice
     return min_square_vertice
@@ -138,7 +138,7 @@ def find_vertice_with_coordinates_and_remove_duplicates(x, y, lower_layer_square
     result_vertice = None
     verticies_to_delete = []
     for square in lower_layer_squares:
-        for vertice in square.verticies:
+        for vertice in square.vertices:
             if vertice.x == x and vertice.y == y:
                 if result_vertice is None:
                     result_vertice = vertice
@@ -146,9 +146,9 @@ def find_vertice_with_coordinates_and_remove_duplicates(x, y, lower_layer_square
                     verticies_to_delete.append(vertice)
     for vertice_to_delete in verticies_to_delete:
         for square in lower_layer_squares:
-            if vertice_to_delete in square.verticies:
-                square.verticies.remove(vertice_to_delete)
-                square.verticies.append(result_vertice)
+            if vertice_to_delete in square.vertices:
+                square.vertices.remove(vertice_to_delete)
+                square.vertices.append(result_vertice)
     return result_vertice
 
 """
@@ -172,7 +172,7 @@ Function which sets labels in graph fragment
 def set_labels_in_graph_fragment(graph_fragment: GraphFragment):
     for vertice in graph_fragment.vertices:
         vertice.label = VertexLabel.E
-    graph_fragment.middle_vertice.label = VertexLabel.I
+    graph_fragment.middle_vertex.label = VertexLabel.I
 
 
 def get_lower_left_vertice_in_graph_fragment(graph_fragment: GraphFragment) -> Vertex:

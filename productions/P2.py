@@ -72,19 +72,19 @@ def P2(id):
     set_labels_in_graph_fragment(lower_right_fragment)
     set_labels_in_graph_fragment(upper_left_fragment)
     set_labels_in_graph_fragment(lower_left_fragment)
-    verticies_graph_fragment[upper_right_fragment.middle_vertice.id] = upper_right_fragment
-    verticies_graph_fragment[lower_right_fragment.middle_vertice.id] = lower_right_fragment
-    verticies_graph_fragment[upper_left_fragment.middle_vertice.id] = upper_left_fragment
-    verticies_graph_fragment[lower_left_fragment.middle_vertice.id] = lower_left_fragment
+    verticies_graph_fragment[upper_right_fragment.middle_vertex.id] = upper_right_fragment
+    verticies_graph_fragment[lower_right_fragment.middle_vertex.id] = lower_right_fragment
+    verticies_graph_fragment[upper_left_fragment.middle_vertex.id] = upper_left_fragment
+    verticies_graph_fragment[lower_left_fragment.middle_vertex.id] = lower_left_fragment
     graph_fragment_list.append(upper_right_fragment)
     graph_fragment_list.append(lower_right_fragment)
     graph_fragment_list.append(upper_left_fragment)
     graph_fragment_list.append(lower_left_fragment)
-    inter_layer_connections.append((upper_right_fragment.middle_vertice.id, id))
-    inter_layer_connections.append((lower_right_fragment.middle_vertice.id, id))
-    inter_layer_connections.append((upper_left_fragment.middle_vertice.id, id))
-    inter_layer_connections.append((lower_left_fragment.middle_vertice.id, id))
-    graph_fragment.middle_vertice.label = VertexLabel.i
+    inter_layer_connections.append((upper_right_fragment.middle_vertex.id, id))
+    inter_layer_connections.append((lower_right_fragment.middle_vertex.id, id))
+    inter_layer_connections.append((upper_left_fragment.middle_vertex.id, id))
+    inter_layer_connections.append((lower_left_fragment.middle_vertex.id, id))
+    graph_fragment.middle_vertex.label = VertexLabel.i
     sorted_graph_fragment_list = sort_graph_fragments(graph_fragment_list)
     graph_fragment_list.clear()
     graph_fragment_list.extend(sorted_graph_fragment_list)

@@ -40,7 +40,7 @@ def P1(id):
     graph_fragment_list.append(new_fragment)  # add fragment to a graph list
     inter_layer_connections.append((middle_vertice.id, id))  # create connection between graph fragments (also between layers)
     set_labels_in_graph_fragment(new_fragment)
-    graph_fragment.middle_vertice.label = VertexLabel.i  # set upper graph fragment middle vertice label to i - occupied
+    graph_fragment.middle_vertex.label = VertexLabel.i  # set upper graph fragment middle vertice label to i - occupied
     sorted_graph_fragment_list = sort_graph_fragments(graph_fragment_list)
     graph_fragment_list.clear()
     graph_fragment_list.extend(sorted_graph_fragment_list)  # update graph_fragment_list to sorted one

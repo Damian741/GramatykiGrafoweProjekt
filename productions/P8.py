@@ -30,6 +30,7 @@ def P8(id1, id2, id3, id4):
     #merge_verticies_to_upper(top_left_vertex, bottom_left_vertex, graph_fragment_lower_left)
     merge_verticies_to_upper(top_right_vertex, bottom_right_vertex, graph_fragment_lower_right)
     merge_verticies_to_upper(top_middle_vertex, bottom_middle_vertex, graph_fragment_lower_left)
+    merge_verticies_to_upper(top_middle_vertex, bottom_middle_vertex, graph_fragment_lower_right)
 
 def merge_verticies_to_upper(top_vertex : Vertex, bottom_vertex : Vertex, lower_graph_fragment : GraphFragment):
     bottom_vertex.y = top_vertex.y

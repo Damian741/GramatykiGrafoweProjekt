@@ -7,7 +7,7 @@ from data.VertexLabel import VertexLabel
 
 
 class Vertex:
-    def __init__(self, x, y, id, label: VertexLabel):
+    def __init__(self, x: int, y: int, id: int, label: VertexLabel):
         self.x = x
         self.y = y
         self.id = id

@@ -10,9 +10,9 @@ Squares are the physical 1x1 squares which the fragment occupies.
 
 
 class GraphFragment:
-    def __init__(self, squares, verticies, layer_number, edges, middle_vertice):
+    def __init__(self, squares, vertices, layer_number, edges, middle_vertice):
         self.squares = squares
-        self.verticies = verticies
+        self.vertices = vertices
         self.layer_number = layer_number
         self.edges = edges
         self.middle_vertice = middle_vertice

@@ -8,7 +8,7 @@ i - a middle vertice from which you cannot make a lower part of the graph as it 
 """
 
 
-class VerticeLabel(Enum):
+class VertexLabel(Enum):
     E = 1
     I = 2
     i = 3

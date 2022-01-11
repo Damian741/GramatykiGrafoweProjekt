@@ -1,8 +1,8 @@
 import math
 from data.Square import Square
-from data.Vertice import Vertice
+from data.Vertex import Vertex
 from data.GraphFragment import GraphFragment
-from data.VerticeLabel import VerticeLabel
+from data.VertexLabel import VertexLabel
 
 """
 _BETWEEN_LAYER_BUFFER - constant value which defines space between given graph layers
@@ -15,7 +15,7 @@ inter_layer_connections - list of all connections between upper and lower layers
 """
 _BETWEEN_LAYER_BUFFER = 1  # possible to modify
 _graph_verticies_id_counter = 1
-_start_vertice = Vertice(0, 0, 0, VerticeLabel.I)
+_start_vertice = Vertex(0, 0, 0, VertexLabel.I)
 _start_fragment = GraphFragment([], [_start_vertice], -1, [], _start_vertice)
 verticies_graph_fragment = {0: _start_fragment}
 graph_fragment_list = [_start_fragment]
@@ -88,19 +88,19 @@ def _resolve_verticies_coordinates_for_square(square):
     y_upper_left_vertice = acc - square_row - (square_row // 2)
     x_upper_left_vertice = square_column + (square_column // 2)
     square.verticies.append(
-        Vertice(x_upper_left_vertice, y_upper_left_vertice, _graph_verticies_id_counter, VerticeLabel.UNDEFINED))
+        Vertex(x_upper_left_vertice, y_upper_left_vertice, _graph_verticies_id_counter, VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
     square.verticies.append(
-        Vertice(x_upper_left_vertice + 1, y_upper_left_vertice, _graph_verticies_id_counter, VerticeLabel.UNDEFINED))
+        Vertex(x_upper_left_vertice + 1, y_upper_left_vertice, _graph_verticies_id_counter, VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
     square.verticies.append(
-        Vertice(x_upper_left_vertice, y_upper_left_vertice - 1, _graph_verticies_id_counter, VerticeLabel.UNDEFINED))
+        Vertex(x_upper_left_vertice, y_upper_left_vertice - 1, _graph_verticies_id_counter, VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
-    square.verticies.append(Vertice(x_upper_left_vertice + 1, y_upper_left_vertice - 1, _graph_verticies_id_counter,
-                                    VerticeLabel.UNDEFINED))
+    square.verticies.append(Vertex(x_upper_left_vertice + 1, y_upper_left_vertice - 1, _graph_verticies_id_counter,
+                                    VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
-    square.verticies.append(Vertice(x_upper_left_vertice + 0.5, y_upper_left_vertice - 0.5, _graph_verticies_id_counter,
-                                    VerticeLabel.UNDEFINED))
+    square.verticies.append(Vertex(x_upper_left_vertice + 0.5, y_upper_left_vertice - 0.5, _graph_verticies_id_counter,
+                                    VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
 
 """
@@ -169,32 +169,56 @@ def return_graph_fragment_squares_from_upper_left_square(lower_layer_squares, up
 """
 Function which sets labels in graph fragment
 """
-def set_labels_in_graph_fragment(graph_fragment):
-    for vertice in graph_fragment.verticies:
-        vertice.label = VerticeLabel.E
-    graph_fragment.middle_vertice.label = VerticeLabel.I
+def set_labels_in_graph_fragment(graph_fragment: GraphFragment):
+    for vertice in graph_fragment.vertices:
+        vertice.label = VertexLabel.E
+    graph_fragment.middle_vertice.label = VertexLabel.I
 
 
-def get_lower_left_vertice_in_graph_fragment(verticies):
+def get_lower_left_vertice_in_graph_fragment(graph_fragment: GraphFragment) -> Vertex:
     min_x = MAX_INT
     min_y = 0
-    for v in verticies:
+    for v in graph_fragment.vertices:
         if v.x < min_x:
             min_x = v.x
         if v.y < min_y:
             min_y = v.y
-    for v in verticies:
+    for v in graph_fragment.vertices:
         if v.x == min_x and v.y == min_y:
             return v
 
-def get_upper_left_vertice_in_graph_fragment(verticies):
+def get_lower_right_vertice_in_graph_fragment(graph_fragment: GraphFragment) -> Vertex:
+    max_x = 0
+    min_y = 0
+    for v in graph_fragment.vertices:
+        if v.x > max_x:
+            max_x = v.x
+        if v.y < min_y:
+            min_y = v.y
+    for v in graph_fragment.vertices:
+        if v.x == max_x and v.y == min_y:
+            return v
+
+def get_upper_left_vertice_in_graph_fragment(graph_fragment: GraphFragment) -> Vertex:
     min_x = MAX_INT
     max_y = -MAX_INT
-    for v in verticies:
+    for v in graph_fragment.vertices:
         if v.x < min_x:
             min_x = v.x
         if v.y > max_y:
             max_y = v.y
-    for v in verticies:
+    for v in graph_fragment.vertices:
         if v.x == min_x and v.y == max_y:
+            return v
+
+def get_upper_right_vertice_in_graph_fragment(graph_fragment: GraphFragment) -> Vertex:
+    max_x = 0
+    max_y = -MAX_INT
+    for v in graph_fragment.vertices:
+        if v.x > max_x:
+            max_x = v.x
+        if v.y > max_y:
+            max_y = v.y
+    for v in graph_fragment.vertices:
+        if v.x == max_x and v.y == max_y:
             return v

@@ -2,37 +2,59 @@ from common import *
 from data.VertexLabel import VertexLabel
 from util.SortUtils import sort_graph_fragments
 
+"""
+Ids should be sorted by y and next by x values.
+"""
+
 
 def P7(id1, id2, id3, id4):
     global verticies_graph_fragment
     global graph_fragment_list
+
     graph_fragment_upper_left = verticies_graph_fragment.get(id1)
     graph_fragment_upper_right = verticies_graph_fragment.get(id2)
     graph_fragment_lower_left = verticies_graph_fragment.get(id3)
     graph_fragment_lower_right = verticies_graph_fragment.get(id4)
-    print(graph_fragment_upper_left)
-    print(graph_fragment_upper_right)
-    print(graph_fragment_lower_left)
-    print(graph_fragment_lower_right)
-    print(graph_fragment_upper_left.vertices)
-    for v in graph_fragment_upper_left.vertices:
-        print(v.x, v.y, v.id)
 
-    top_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_left)
-    bottom_left_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_left)
-    
-    top_middle_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_right)
-    bottom_middle_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_right)
+    if not set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_upper_right.vertices):
+        top_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_left)
+        bottom_left_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_left)
 
-    top_right_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_right)
-    bottom_right_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_lower_right)
+        top_middle_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_right)
+        bottom_middle_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_right)
 
-    merge_verticies_to_upper(top_left_vertex, bottom_left_vertex, graph_fragment_lower_left)
-    merge_verticies_to_upper(top_right_vertex, bottom_right_vertex, graph_fragment_lower_right)
-    merge_verticies_to_upper(top_middle_vertex, bottom_middle_vertex, graph_fragment_lower_left)
-    merge_verticies_to_upper(top_middle_vertex, bottom_middle_vertex, graph_fragment_lower_right)
+        top_right_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_right)
+        bottom_right_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_lower_right)
 
-def merge_verticies_to_upper(top_vertex : Vertex, bottom_vertex : Vertex, lower_graph_fragment : GraphFragment):
+        merge_vertices_to_zero_point(top_left_vertex, bottom_left_vertex, graph_fragment_list)
+        merge_vertices_to_zero_point(top_right_vertex, bottom_right_vertex, graph_fragment_list)
+        merge_vertices_to_zero_point(top_middle_vertex, bottom_middle_vertex, graph_fragment_list)
+
+    else:
+        left_top_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_upper_left)
+        right_top_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_upper_right)
+
+        left_middle_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_left)
+        right_middle_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_right)
+
+        left_bottom_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_lower_left)
+        right_bottom_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_lower_right)
+
+        merge_vertices_to_zero_point(left_top_vertex, right_top_vertex, graph_fragment_list)
+        merge_vertices_to_zero_point(left_middle_vertex, right_middle_vertex, graph_fragment_list)
+        merge_vertices_to_zero_point(left_bottom_vertex, right_bottom_vertex, graph_fragment_list)
+
+
+def merge_vertices_to_zero_point(strong_vertex: Vertex, deleted_vertex: Vertex, graph_fragment_list: []):
+    for single_graph_fragment in graph_fragment_list:
+        if deleted_vertex in single_graph_fragment.vertices:
+            middle_vertex = single_graph_fragment.middle_vertex
+            merge_vertices_to_zero_point_single_operation(strong_vertex, deleted_vertex,
+                                                          verticies_graph_fragment.get(middle_vertex.id))
+
+
+def merge_vertices_to_zero_point_single_operation(top_vertex: Vertex, bottom_vertex: Vertex,
+                                                  lower_graph_fragment: GraphFragment):
     bottom_vertex.y = top_vertex.y
     print(lower_graph_fragment.edges)
 

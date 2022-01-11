@@ -7,7 +7,7 @@ a layer - on layer 0 you have 1 square with field id 0, on layer 1 you have 4 sq
 
 
 class Square:
-    def __init__(self, field_id, layer_number):
+    def __init__(self, field_id: int, layer_number: int):
         self.field_id = field_id
         self.layer_number = layer_number
-        self.verticies = []
+        self.vertices = []

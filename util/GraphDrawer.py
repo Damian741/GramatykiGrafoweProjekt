@@ -1,12 +1,12 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 from common import graph_fragment_list, inter_layer_connections
-from data.VerticeLabel import VerticeLabel
+from data.VertexLabel import VertexLabel
 
 label_color_map = {
-    VerticeLabel.E: 'blue',
-    VerticeLabel.I: 'orange',
-    VerticeLabel.i: 'red'
+    VertexLabel.E: 'blue',
+    VertexLabel.I: 'orange',
+    VertexLabel.i: 'red'
 }
 color_list = []
 
@@ -19,7 +19,7 @@ def draw_graph():
     global color_list
     G = nx.Graph()
     for graph_fragment in graph_fragment_list:
-        for vertice in graph_fragment.verticies:
+        for vertice in graph_fragment.vertices:
             if G.nodes.get(vertice.id) is None:
                 G.add_node(vertice.id)
                 color_list.append(label_color_map[vertice.label])
@@ -30,7 +30,7 @@ def draw_graph():
         G.add_edge(inter_layer_connection[0], inter_layer_connection[1])
     pos = {}
     for graph_fragment in graph_fragment_list:
-        for vertice in graph_fragment.verticies:
+        for vertice in graph_fragment.vertices:
             pos[vertice.id] = (vertice.x, vertice.y)
     nx.draw_networkx(G, pos, node_color=color_list)  # , node_size = 10, font_size=1)
     ax = plt.gca()

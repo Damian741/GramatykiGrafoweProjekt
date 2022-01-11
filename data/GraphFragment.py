@@ -9,10 +9,22 @@ Squares are the physical 1x1 squares which the fragment occupies.
 """
 
 
+from typing import List, Tuple
+from data.Square import Square
+from data.Vertex import Vertex
+
+
 class GraphFragment:
-    def __init__(self, squares, verticies, layer_number, edges, middle_vertice):
+    def __init__(
+        self,
+        squares: List[Square],
+        vertices: List[Vertex],
+        layer_number: int,
+        edges: List[Tuple],
+        middle_vertex: Vertex,
+    ):
         self.squares = squares
-        self.verticies = verticies
+        self.vertices = vertices
         self.layer_number = layer_number
         self.edges = edges
-        self.middle_vertice = middle_vertice
+        self.middle_vertex = middle_vertex

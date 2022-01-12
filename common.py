@@ -197,3 +197,49 @@ def get_upper_right_vertice_in_graph_fragment(graph_fragment: GraphFragment) -> 
     for v in graph_fragment.vertices:
         if v.x > graph_fragment.middle_vertex.x and v.y > graph_fragment.middle_vertex.y:
             return v
+
+"""
+Updating indexes
+"""
+def get_all_connected_graph_fragments_x_sided(graph_fragment):
+    graph_fragments = [fragment for fragment in graph_fragment_list
+                       if fragment.middle_vertex.x > graph_fragment.middle_vertex.x
+                       and fragment.middle_vertex.y == graph_fragment.middle_vertex.y
+                       and fragment.layer_number == graph_fragment.layer_number]
+    return graph_fragments
+
+
+def get_all_connected_graph_fragments_y_sided(graph_fragment):
+    graph_fragments = [fragment for fragment in graph_fragment_list
+                       if fragment.middle_vertex.y < graph_fragment.middle_vertex.y
+                       and fragment.middle_vertex.x == graph_fragment.middle_vertex.x
+                       and fragment.layer_number == graph_fragment.layer_number]
+    return graph_fragments
+
+
+def update_x_vertices(graph_fragment, exceptions):
+    new_vertices = []
+    for vertex in graph_fragment.vertices:
+        if vertex.id not in exceptions:
+            vertex.x = vertex.x - 1
+            exceptions.append(vertex.id)
+        new_vertices.append(vertex)
+    graph_fragment.vertices = new_vertices
+    return exceptions
+
+
+def update_y_vertices(graph_fragment, exceptions):
+    new_vertices = []
+    for vertex in graph_fragment.vertices:
+        if vertex.id not in exceptions:
+            vertex.y = vertex.y + 1
+            exceptions.append(vertex.id)
+        new_vertices.append(vertex)
+    graph_fragment.vertices = new_vertices
+    return exceptions
+
+
+def remove_graph_fragment(graph_fragment):
+    for fragment in graph_fragment_list:
+        if graph_fragment == fragment:
+            graph_fragment_list.remove(graph_fragment)

@@ -1,3 +1,4 @@
+from typing import List
 from common import *
 from data.VertexLabel import VertexLabel
 from util.SortUtils import sort_graph_fragments
@@ -28,6 +29,13 @@ def P8(id1, id2, id3, id4):
         merge_vertices_to_zero_point(top_right_vertex, bottom_right_vertex, graph_fragment_list)
         merge_vertices_to_zero_point(top_middle_vertex, bottom_middle_vertex, graph_fragment_list)
 
+        upper_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_left)
+        graph_fragment_modified_list = get_all_connected_graph_fragments_y_sided(graph_fragment_upper_left)
+        graph_fragment_modified_list.extend(get_all_connected_graph_fragments_y_sided(graph_fragment_upper_right))
+        exceptions = [top_middle_vertex.id, top_right_vertex.id]
+        exceptions.extend(get_vertices_ids_to_the_bottom(upper_left_vertex))
+        move_vertices_y(graph_fragment_modified_list, exceptions)
+
     if set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_lower_left.vertices):
         top_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_left)
         bottom_left_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_left)
@@ -37,6 +45,13 @@ def P8(id1, id2, id3, id4):
 
         merge_vertices_to_zero_point(top_left_vertex, bottom_left_vertex, graph_fragment_list)
         merge_vertices_to_zero_point(top_middle_vertex, bottom_middle_vertex, graph_fragment_list)
+
+        upper_right_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_right)
+        graph_fragment_modified_list = get_all_connected_graph_fragments_y_sided(graph_fragment_upper_left)
+        graph_fragment_modified_list.extend(get_all_connected_graph_fragments_y_sided(graph_fragment_upper_right))
+        exceptions = [top_middle_vertex.id, top_left_vertex.id]
+        exceptions.extend(get_vertices_ids_to_the_bottom(upper_right_vertex))
+        move_vertices_y(graph_fragment_modified_list, exceptions)
 
     if set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_upper_right.vertices):
         top_left_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_upper_left)
@@ -48,9 +63,14 @@ def P8(id1, id2, id3, id4):
         merge_vertices_to_zero_point(top_left_vertex, top_right_vertex, graph_fragment_list)
         merge_vertices_to_zero_point(middle_left_vertex, middle_right_vertex, graph_fragment_list)
 
+        bottom_left_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_lower_left)
+        graph_fragment_modified_list = get_all_connected_graph_fragments_x_sided(graph_fragment_upper_left)
+        graph_fragment_modified_list.extend(get_all_connected_graph_fragments_x_sided(graph_fragment_lower_left))
+        exceptions = [middle_left_vertex.id, top_left_vertex.id]
+        exceptions.extend(get_vertices_ids_to_the_right(bottom_left_vertex))
+        move_vertices_x(graph_fragment_modified_list, exceptions)
+
     if set(graph_fragment_lower_left.vertices).isdisjoint(graph_fragment_lower_right.vertices):
-
-
         middle_left_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_left)
         middle_right_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_right)
 
@@ -60,7 +80,20 @@ def P8(id1, id2, id3, id4):
         merge_vertices_to_zero_point(middle_left_vertex, middle_right_vertex, graph_fragment_list)
         merge_vertices_to_zero_point(bottom_left_vertex, bottom_right_vertex, graph_fragment_list)
 
-def merge_vertices_to_zero_point(strong_vertex: Vertex, deleted_vertex: Vertex, graph_fragment_list: []):
+        top_left_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_upper_left)
+        graph_fragment_modified_list = get_all_connected_graph_fragments_x_sided(graph_fragment_upper_left)
+        graph_fragment_modified_list.extend(get_all_connected_graph_fragments_x_sided(graph_fragment_lower_left))
+        exceptions = [middle_left_vertex.id, bottom_left_vertex.id]
+        exceptions.extend(get_vertices_ids_to_the_right(top_left_vertex))
+        move_vertices_x(graph_fragment_modified_list, exceptions)
+
+    if graph_fragment_modified_list != None:
+        graph_fragment_list.extend(graph_fragment_modified_list)
+        sorted_graph_fragment_list = sort_graph_fragments(graph_fragment_list)
+        graph_fragment_list.clear()
+        graph_fragment_list.extend(sorted_graph_fragment_list)
+
+def merge_vertices_to_zero_point(strong_vertex: Vertex, deleted_vertex: Vertex, graph_fragment_list: List[GraphFragment]):
     for single_graph_fragment in graph_fragment_list:
         if deleted_vertex in single_graph_fragment.vertices:
             middle_vertex = single_graph_fragment.middle_vertex

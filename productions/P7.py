@@ -1,3 +1,4 @@
+from typing import List
 from common import *
 from data.VertexLabel import VertexLabel
 from util.SortUtils import sort_graph_fragments
@@ -32,17 +33,8 @@ def P7(id1, id2, id3, id4):
 
         graph_fragment_modified_list = get_all_connected_graph_fragments_y_sided(graph_fragment_upper_left)
         graph_fragment_modified_list.extend(get_all_connected_graph_fragments_y_sided(graph_fragment_upper_right))
+        move_vertices_y(graph_fragment_modified_list, [top_right_vertex.id, top_middle_vertex.id, top_left_vertex.id])
 
-        exceptions = [top_right_vertex.id, top_middle_vertex.id, top_left_vertex.id]
-        for subgraph in graph_fragment_modified_list:
-            remove_graph_fragment(subgraph)
-            vertices = False
-            if subgraph.middle_vertex.id in verticies_graph_fragment:
-                verticies_graph_fragment.pop(subgraph.middle_vertex.id, None)
-                vertices = True
-            exceptions = update_y_vertices(subgraph, exceptions)
-            if vertices:
-                verticies_graph_fragment[subgraph.middle_vertex.id] = subgraph
     else:
         left_top_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_upper_left)
         right_top_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_upper_right)
@@ -59,17 +51,7 @@ def P7(id1, id2, id3, id4):
 
         graph_fragment_modified_list = get_all_connected_graph_fragments_x_sided(graph_fragment_upper_left)
         graph_fragment_modified_list.extend(get_all_connected_graph_fragments_x_sided(graph_fragment_lower_left))
-
-        exceptions = [left_top_vertex.id, left_middle_vertex.id, left_bottom_vertex.id]
-        for subgraph in graph_fragment_modified_list:
-            remove_graph_fragment(subgraph)
-            vertices = False
-            if subgraph.middle_vertex.id in verticies_graph_fragment:
-                verticies_graph_fragment.pop(subgraph.middle_vertex.id, None)
-                vertices = True
-            exceptions = update_x_vertices(subgraph, exceptions)
-            if vertices:
-                verticies_graph_fragment[subgraph.middle_vertex.id] = subgraph
+        move_vertices_x(graph_fragment_modified_list, [left_top_vertex.id, left_middle_vertex.id, left_bottom_vertex.id])
 
     graph_fragment_list.extend(graph_fragment_modified_list)
     sorted_graph_fragment_list = sort_graph_fragments(graph_fragment_list)
@@ -77,7 +59,7 @@ def P7(id1, id2, id3, id4):
     graph_fragment_list.extend(sorted_graph_fragment_list)
 
 
-def merge_vertices_to_zero_point(strong_vertex: Vertex, deleted_vertex: Vertex, graph_fragment_list: []):
+def merge_vertices_to_zero_point(strong_vertex: Vertex, deleted_vertex: Vertex, graph_fragment_list: List[GraphFragment]):
     for single_graph_fragment in graph_fragment_list:
         if deleted_vertex in single_graph_fragment.vertices:
             middle_vertex = single_graph_fragment.middle_vertex

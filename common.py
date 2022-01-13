@@ -1,5 +1,5 @@
 import math
-from typing import List
+from typing import List, Tuple
 from data.Square import Square
 from data.Vertex import Vertex
 from data.GraphFragment import GraphFragment
@@ -286,3 +286,30 @@ def get_vertices_ids_to_the_bottom(vertex: Vertex) -> List[int]:
             if v.x == vertex.x and v.y <= vertex.y:
                 result.add(v.id)
     return list(result)
+
+
+def get_vertex_from_id(id: int, graph_fragment: GraphFragment) -> Vertex:
+    for vertex in graph_fragment.vertices:
+        if vertex.id == id:
+            return vertex
+
+
+def check_vertices_labels(vertices: List[Vertex], label: VertexLabel) -> bool:
+    for vertex in vertices:
+        if vertex.label != label:
+            return False
+    return True
+
+
+def check_vertices_coordinates_vertical(vertices_pairs: List[Tuple[Vertex, Vertex]]):
+    for pair in vertices_pairs:
+        if pair[0].x != pair[1].x + 1 and pair[0].y != pair[1].y:
+            return False
+    return True
+
+
+def check_vertices_coordinates_horizontal(vertices_pairs: List[Tuple[Vertex, Vertex]]):
+    for pair in vertices_pairs:
+        if pair[0].y != pair[1].y + 1 and pair[0].x != pair[1].x:
+            return False
+    return True

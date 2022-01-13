@@ -17,6 +17,9 @@ def P7(id1, id2, id3, id4):
     graph_fragment_lower_left = verticies_graph_fragment.get(id3)
     graph_fragment_lower_right = verticies_graph_fragment.get(id4)
 
+    if None in [graph_fragment_upper_left, graph_fragment_upper_right, graph_fragment_lower_left, graph_fragment_lower_right]:
+        raise Exception("Vertex I labels needed for production 7 are incorrect in graph")
+
     if not set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_upper_right.vertices):
         top_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_left)
         bottom_left_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_left)
@@ -26,6 +29,17 @@ def P7(id1, id2, id3, id4):
 
         top_right_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_right)
         bottom_right_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_lower_right)
+
+        continue_production = check_vertices_labels([top_left_vertex, top_middle_vertex, top_right_vertex, bottom_right_vertex,
+                               bottom_middle_vertex, bottom_left_vertex], VertexLabel.E)
+        if not continue_production:
+            raise Exception("Vertex E labels needed for production 7 are incorrect in graph")
+
+        continue_production = check_vertices_coordinates_horizontal([(top_left_vertex, bottom_left_vertex),
+                                               (top_middle_vertex, bottom_middle_vertex),
+                                               (top_right_vertex, bottom_right_vertex)])
+        if not continue_production:
+            raise Exception("Vertex coordinates are wrong for 7 production")
 
         merge_vertices_to_zero_point(top_left_vertex, bottom_left_vertex, graph_fragment_list)
         merge_vertices_to_zero_point(top_right_vertex, bottom_right_vertex, graph_fragment_list)
@@ -44,6 +58,17 @@ def P7(id1, id2, id3, id4):
 
         left_bottom_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_lower_left)
         right_bottom_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_lower_right)
+
+        continue_production = check_vertices_labels([left_top_vertex, left_middle_vertex, left_bottom_vertex, right_top_vertex,
+                               right_middle_vertex, right_bottom_vertex], VertexLabel.E)
+        if not continue_production:
+            raise Exception("Vertex E labels needed for production 7 are incorrect in graph")
+
+        continue_production = check_vertices_coordinates_vertical([(left_top_vertex, right_top_vertex),
+                                             (left_middle_vertex, right_middle_vertex),
+                                             (left_bottom_vertex, right_bottom_vertex)])
+        if not continue_production:
+            raise Exception("Vertex coordinates are wrong for 7 production")
 
         merge_vertices_to_zero_point(left_top_vertex, right_top_vertex, graph_fragment_list)
         merge_vertices_to_zero_point(left_middle_vertex, right_middle_vertex, graph_fragment_list)

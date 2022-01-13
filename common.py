@@ -1,4 +1,5 @@
 import math
+from typing import List
 from data.Square import Square
 from data.Vertex import Vertex
 from data.GraphFragment import GraphFragment
@@ -243,3 +244,45 @@ def remove_graph_fragment(graph_fragment):
     for fragment in graph_fragment_list:
         if graph_fragment == fragment:
             graph_fragment_list.remove(graph_fragment)
+
+
+def move_vertices_x(graph_fragment_modified_list: List[GraphFragment], exceptions: List[int]):
+    for subgraph in graph_fragment_modified_list:
+        remove_graph_fragment(subgraph)
+        vertices = False
+        if subgraph.middle_vertex.id in verticies_graph_fragment:
+            verticies_graph_fragment.pop(subgraph.middle_vertex.id, None)
+            vertices = True
+        exceptions = update_x_vertices(subgraph, exceptions)
+        if vertices:
+            verticies_graph_fragment[subgraph.middle_vertex.id] = subgraph
+
+
+def move_vertices_y(graph_fragment_modified_list: List[GraphFragment], exceptions: List[int]):
+    for subgraph in graph_fragment_modified_list:
+        remove_graph_fragment(subgraph)
+        vertices = False
+        if subgraph.middle_vertex.id in verticies_graph_fragment:
+            verticies_graph_fragment.pop(subgraph.middle_vertex.id, None)
+            vertices = True
+        exceptions = update_y_vertices(subgraph, exceptions)
+        if vertices:
+            verticies_graph_fragment[subgraph.middle_vertex.id] = subgraph
+
+
+def get_vertices_ids_to_the_right(vertex: Vertex) -> List[int]:
+    result = set()
+    for fragment in graph_fragment_list:
+        for v in fragment.vertices:
+            if v.y == vertex.y and v.x >= vertex.x:
+                result.add(v.id)
+    return list(result)
+
+
+def get_vertices_ids_to_the_bottom(vertex: Vertex) -> List[int]:
+    result = set()
+    for fragment in graph_fragment_list:
+        for v in fragment.vertices:
+            if v.x == vertex.x and v.y <= vertex.y:
+                result.add(v.id)
+    return list(result)

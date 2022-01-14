@@ -19,7 +19,10 @@ def P7(id1, id2, id3, id4):
     if None in [graph_fragment_upper_left, graph_fragment_upper_right, graph_fragment_lower_left, graph_fragment_lower_right]:
         raise Exception("Vertex I labels needed for production 7 are incorrect in graph")
 
-    if not set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_upper_right.vertices):
+    if not set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_upper_right.vertices)\
+            and not set(graph_fragment_lower_left.vertices).isdisjoint(graph_fragment_lower_right.vertices)\
+            and set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_lower_left.vertices)\
+            and set(graph_fragment_upper_right.vertices).isdisjoint(graph_fragment_lower_right.vertices):
         top_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_left)
         bottom_left_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_left)
 
@@ -52,7 +55,10 @@ def P7(id1, id2, id3, id4):
         graph_fragment_modified_list.extend(get_all_connected_graph_fragments_y_sided(graph_fragment_upper_right))
         move_vertices_y(graph_fragment_modified_list, [top_right_vertex.id, top_middle_vertex.id, top_left_vertex.id])
 
-    else:
+    elif not set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_lower_left.vertices)\
+            and not set(graph_fragment_upper_right.vertices).isdisjoint(graph_fragment_lower_right.vertices) \
+            and set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_upper_right.vertices) \
+            and set(graph_fragment_lower_left.vertices).isdisjoint(graph_fragment_lower_right.vertices):
         left_top_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_upper_left)
         right_top_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_upper_right)
 
@@ -84,6 +90,9 @@ def P7(id1, id2, id3, id4):
         graph_fragment_modified_list = get_all_connected_graph_fragments_x_sided(graph_fragment_upper_left)
         graph_fragment_modified_list.extend(get_all_connected_graph_fragments_x_sided(graph_fragment_lower_left))
         move_vertices_x(graph_fragment_modified_list, [left_top_vertex.id, left_middle_vertex.id, left_bottom_vertex.id])
+
+    else:
+        raise Exception("Graph is wrongly configured")
 
     graph_fragment_list.extend(graph_fragment_modified_list)
     sorted_graph_fragment_list = sort_graph_fragments(graph_fragment_list)

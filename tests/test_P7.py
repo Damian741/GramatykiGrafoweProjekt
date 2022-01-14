@@ -77,3 +77,18 @@ def test_p7_wrong_labels_of_middle_vertices():
     P2(40)
     with pytest.raises(Exception, match="Vertex I labels needed for production 7 are incorrect in graph"):
         P7(40, 45, 90, 95)
+
+
+def test_p7_merged_vertex():
+    prepare_graph()
+    P7(40, 45, 90, 95)
+    P7(60, 65, 70, 75)
+    P7(35, 50, 45, 60)
+    with pytest.raises(Exception, match="Graph is wrongly configured"):
+        P7(95, 70, 105, 80)
+
+
+def test_p7_wrong_vertex_coordinates():
+    prepare_graph()
+    with pytest.raises(Exception, match="Vertex coordinates are wrong for 7 production"):
+        P7(35, 45, 70, 80)

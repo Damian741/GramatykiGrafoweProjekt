@@ -1,4 +1,3 @@
-from typing import List
 from common import *
 from data.VertexLabel import VertexLabel
 from util.SortUtils import sort_graph_fragments
@@ -30,6 +29,10 @@ def P7(id1, id2, id3, id4):
         top_right_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_right)
         bottom_right_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_lower_right)
 
+        if None in [top_left_vertex, top_middle_vertex, top_right_vertex, bottom_right_vertex,
+                               bottom_middle_vertex, bottom_left_vertex]:
+            raise Exception("Some vertex is missing")
+
         continue_production = check_vertices_labels([top_left_vertex, top_middle_vertex, top_right_vertex, bottom_right_vertex,
                                bottom_middle_vertex, bottom_left_vertex], VertexLabel.E)
         if not continue_production:
@@ -58,6 +61,10 @@ def P7(id1, id2, id3, id4):
 
         left_bottom_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_lower_left)
         right_bottom_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_lower_right)
+
+        if None in [left_top_vertex, left_middle_vertex, left_bottom_vertex, right_top_vertex,
+                               right_middle_vertex, right_bottom_vertex]:
+            raise Exception("Some vertex is missing")
 
         continue_production = check_vertices_labels([left_top_vertex, left_middle_vertex, left_bottom_vertex, right_top_vertex,
                                right_middle_vertex, right_bottom_vertex], VertexLabel.E)

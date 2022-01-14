@@ -303,13 +303,13 @@ def check_vertices_labels(vertices: List[Vertex], label: VertexLabel) -> bool:
 
 def check_vertices_coordinates_vertical(vertices_pairs: List[Tuple[Vertex, Vertex]]):
     for pair in vertices_pairs:
-        if pair[0].x != pair[1].x + 1 and pair[0].y != pair[1].y:
+        if pair[0].x != pair[1].x + 1 or pair[0].y != pair[1].y:
             return False
     return True
 
 
 def check_vertices_coordinates_horizontal(vertices_pairs: List[Tuple[Vertex, Vertex]]):
     for pair in vertices_pairs:
-        if pair[0].y != pair[1].y + 1 and pair[0].x != pair[1].x:
+        if pair[0].y != pair[1].y + 1 or pair[0].x != pair[1].x:
             return False
     return True

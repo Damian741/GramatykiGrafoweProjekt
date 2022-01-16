@@ -6,6 +6,38 @@
 
 #### 15.01.2022
 
+## Opis teoretyczny
+
+### Krótki opis, w jaki sposób produkcja została zaimplementowana i w jaki sposób przygotowane zostały testy.
+
+Produkcje P5 i P6 zostały zaimplementowane w środowisku przygotowanym przez kolegów z drużyny nr 1
+
+### W jaki sposób sprawdzacie Pańswo, czy graf do którego stosujecie produkcje jest izomorficzny z grafem lewej strony produkcji?
+
+Podczas sprawdzania czy produkcję można wykonać mamy szereg testów sprawdzająych:
+
+- izomorficzność krawędzi
+- izomorficzność etykiet
+- izomorficzność współrzędnych
+- izomorficzność wierzchołków
+
+### Na jakiej podstawie decydujecie Państwo w którym miejscu w grafie będziemy stosować produkcje?
+
+Model nie pozwala na inteligentne znajdowanie izomorficznych grafów, koledzy przygotowali framework w ten sposób, że trzeba wskazać konkretne miejsce gdzie produkcja ma zostać zastosowana. Niemniej jednak sprawdzamy czy taka produkcja ma być prawo zastosowana, jeżeli nie, operacja po prostu się nie wykona.
+
+### Jak wyszukujecie Państwo w dużym grafie podgraf izmomorficzny z grafem lewej strony produkcji?
+
+Jak wyżej, należy podać wcześniej zainteresowany przez nas obszar do potencjalnej produkcji.
+
+### Jak sprawdzacie Państwo, czy w wyniku zastosowania produkcji do danego grafu powstanie "poprawny" graf?
+
+Nie mamy do końca sprawdzenia w kodzie, jednak dodaliśmy ponad 30 testów jednostkowych (po 15 do każdej produkcji), które między innymi sprawdzają poprawność lewej i prawej strony produkcji grafu.
+
+### Przeprowadzone testy i ich wyniki (np. zrzutki z ekranu), wraz z grafami do których zostały zastosowane testy
+
+Poniżej znajduje się odwołanie do każdego punktu za jakie miały być oceniane produkcje jak i ich testy. Produkcje mają dopisane jaki nr testu odpowiada za sprawdzenie danej własności.
+
+
 ## P5
 
 [test1](../../tests/test_p5.py)

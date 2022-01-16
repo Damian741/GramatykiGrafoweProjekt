@@ -23,6 +23,12 @@ def P5(id):
 
     al = adjacency_lists(graph_fragment.edges)
 
+    if graph_fragment.middle_vertex.label != VertexLabel.I:
+        return
+
+    if sum([0 if x.label == VertexLabel.E else 1 for x in graph_fragment.vertices if x.id != graph_fragment.middle_vertex.id]) != 0:
+        return
+
     not_connected = [key for key, value in al.items() if real_id not in value and key != real_id]
 
     if len(not_connected) != 3:

@@ -26,6 +26,8 @@ MAX_INT = 4097
 """
 Function which returns row for given single square
 """
+
+
 def _resolve_row_for_square(square):
     divider = 2 ** square.layer_number
     return square.field_id // divider
@@ -34,6 +36,8 @@ def _resolve_row_for_square(square):
 """
 Function which returns column for given single square
 """
+
+
 def _resolve_column_for_square(square):
     divider = 2 ** square.layer_number
     return square.field_id % divider
@@ -42,19 +46,27 @@ def _resolve_column_for_square(square):
 """
 Function which returns ID of upper left square on the lower layer 
 """
+
+
 def _resolve_upper_left_lower_layer_square_id(square_row, square_column, square):
     return square_row * (2 ** (square.layer_number + 2)) + (square_column * 2)
+
 
 """
 Function which returns ID of lower left square on the lower layer 
 """
+
+
 def _resolve_lower_left_lower_layer_square_id(square_row, square_column, square):
     return (square_row * (2 ** (square.layer_number + 2)) + (square_column * 2)) + (2 ** (square.layer_number + 1))
+
 
 """
 Function which generates 4 squares on lower layer for each square from upper layer 
 and appends these 4 squares to lower_layer_squares list
 """
+
+
 def _append_generated_lower_layer_squares(square, lower_layer_squares):
     lower_square_layer = square.layer_number + 1
     square_row = _resolve_row_for_square(square)
@@ -68,9 +80,12 @@ def _append_generated_lower_layer_squares(square, lower_layer_squares):
     lower_layer_squares.append(Square(lower_left_lower_layer_square_id, lower_square_layer))
     lower_layer_squares.append(Square(lower_right_lower_layer_square_id, lower_square_layer))
 
+
 """
 Function which returns coordinates for all vertices of a single square 
 """
+
+
 def _resolve_verticies_coordinates_for_square(square):
     global _graph_verticies_id_counter
     square_layer = square.layer_number
@@ -98,15 +113,18 @@ def _resolve_verticies_coordinates_for_square(square):
         Vertex(x_upper_left_vertice, y_upper_left_vertice - 1, _graph_verticies_id_counter, VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
     square.vertices.append(Vertex(x_upper_left_vertice + 1, y_upper_left_vertice - 1, _graph_verticies_id_counter,
-                                    VertexLabel.UNDEFINED))
+                                  VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
     square.vertices.append(Vertex(x_upper_left_vertice + 0.5, y_upper_left_vertice - 0.5, _graph_verticies_id_counter,
-                                    VertexLabel.UNDEFINED))
+                                  VertexLabel.UNDEFINED))
     _graph_verticies_id_counter += 1
+
 
 """
 Function which returns all single squares for all graph fragments generated on the right side of the production
 """
+
+
 def resolve_lower_layer_squares(graph_fragment):
     squares_list = graph_fragment.squares
     lower_layer_squares = []
@@ -120,9 +138,12 @@ def resolve_lower_layer_squares(graph_fragment):
         _resolve_verticies_coordinates_for_square(square)
     return lower_layer_squares
 
+
 """
 Function which returns lower left vertice from lower_layer_squares list
 """
+
+
 def find_lower_left_vertice(lower_layer_squares):
     min_square_vertice = None
     for square in lower_layer_squares:
@@ -131,10 +152,13 @@ def find_lower_left_vertice(lower_layer_squares):
                 min_square_vertice = vertice
     return min_square_vertice
 
+
 """
 Function which returns a vertice for coordinates and removes 
 its duplicates (other objects representing vertice with the same coords) from neighbouring squares
 """
+
+
 def find_vertice_with_coordinates_and_remove_duplicates(x, y, lower_layer_squares):
     result_vertice = None
     verticies_to_delete = []
@@ -152,9 +176,12 @@ def find_vertice_with_coordinates_and_remove_duplicates(x, y, lower_layer_square
                 square.vertices.append(result_vertice)
     return result_vertice
 
+
 """
 Function which returns all single squares located in upper left square
 """
+
+
 def return_graph_fragment_squares_from_upper_left_square(lower_layer_squares, upper_left_square):
     result_squares = []
     upper_left_square_column = _resolve_column_for_square(upper_left_square)
@@ -167,9 +194,12 @@ def return_graph_fragment_squares_from_upper_left_square(lower_layer_squares, up
             result_squares.append(square)
     return result_squares
 
+
 """
 Function which sets labels in graph fragment
 """
+
+
 def set_labels_in_graph_fragment(graph_fragment: GraphFragment):
     for vertice in graph_fragment.vertices:
         vertice.label = VertexLabel.E
@@ -199,9 +229,12 @@ def get_upper_right_vertice_in_graph_fragment(graph_fragment: GraphFragment) -> 
         if v.x > graph_fragment.middle_vertex.x and v.y > graph_fragment.middle_vertex.y:
             return v
 
+
 """
 Updating indexes
 """
+
+
 def get_all_connected_graph_fragments_x_sided(graph_fragment):
     graph_fragments = [fragment for fragment in graph_fragment_list
                        if fragment.middle_vertex.x > graph_fragment.middle_vertex.x
@@ -302,14 +335,31 @@ def check_vertices_labels(vertices: List[Vertex], label: VertexLabel) -> bool:
 
 
 def check_vertices_coordinates_vertical(vertices_pairs: List[Tuple[Vertex, Vertex]]):
+    vertices = get_list_of_all_vertices()
     for pair in vertices_pairs:
-        if pair[0].x != pair[1].x + 1 or pair[0].y != pair[1].y:
+        if pair[0].y != pair[1].y:
             return False
+        for vertex in vertices:
+            if pair[0].x < vertex.x < pair[1].x and pair[0].y == vertex.y == pair[0].y:
+                return False
     return True
 
 
 def check_vertices_coordinates_horizontal(vertices_pairs: List[Tuple[Vertex, Vertex]]):
+    vertices = get_list_of_all_vertices()
     for pair in vertices_pairs:
-        if pair[0].y != pair[1].y + 1 or pair[0].x != pair[1].x:
+        if pair[0].x != pair[1].x:
             return False
+        for vertex in vertices:
+            if pair[0].y < vertex.y < pair[1].y and pair[0].x == vertex.x == pair[0].x:
+                return False
     return True
+
+
+def get_list_of_all_vertices():
+    all_vertices = set()
+    vertices = [fragment.vertices for fragment in graph_fragment_list]
+    for vertices_list in vertices:
+        for vertex in vertices_list:
+            all_vertices.add(vertex)
+    return all_vertices

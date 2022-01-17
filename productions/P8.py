@@ -11,13 +11,6 @@ def P8(id1, id2, id3, id4):
     graph_fragment_upper_right = verticies_graph_fragment.get(id2)
     graph_fragment_lower_left = verticies_graph_fragment.get(id3)
     graph_fragment_lower_right = verticies_graph_fragment.get(id4)
-    # print(graph_fragment_upper_left)
-    # print(graph_fragment_upper_right)
-    # print(graph_fragment_lower_left)
-    # print(graph_fragment_lower_right)
-    # print(graph_fragment_upper_left.vertices)
-    # for v in graph_fragment_upper_left.vertices:
-    #     print(v.x, v.y, v.id)
 
     if None in [graph_fragment_upper_left, graph_fragment_upper_right, graph_fragment_lower_left, graph_fragment_lower_right]:
         raise Exception("Vertex I labels needed for production 8 are incorrect in graph")

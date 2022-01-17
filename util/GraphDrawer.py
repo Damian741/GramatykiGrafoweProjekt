@@ -32,7 +32,7 @@ def draw_graph():
     for graph_fragment in graph_fragment_list:
         for vertice in graph_fragment.vertices:
             pos[vertice.id] = (vertice.x, vertice.y)
-    nx.draw_networkx(G, pos, node_color=color_list)  # , node_size = 10, font_size=1)
+    nx.draw_networkx(G, pos, node_color=color_list, font_color='gray', font_size=10)  # , node_size = 10, font_size=1)
     ax = plt.gca()
     plt.axis("off")
     plt.show()

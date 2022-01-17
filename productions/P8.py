@@ -11,81 +11,139 @@ def P8(id1, id2, id3, id4):
     graph_fragment_upper_right = verticies_graph_fragment.get(id2)
     graph_fragment_lower_left = verticies_graph_fragment.get(id3)
     graph_fragment_lower_right = verticies_graph_fragment.get(id4)
-    print(graph_fragment_upper_left)
-    print(graph_fragment_upper_right)
-    print(graph_fragment_lower_left)
-    print(graph_fragment_lower_right)
-    print(graph_fragment_upper_left.vertices)
-    for v in graph_fragment_upper_left.vertices:
-        print(v.x, v.y, v.id)
 
-    if set(graph_fragment_upper_right.vertices).isdisjoint(graph_fragment_lower_right.vertices):
+    if None in [graph_fragment_upper_left, graph_fragment_upper_right, graph_fragment_lower_left, graph_fragment_lower_right]:
+        raise Exception("Vertex I labels needed for production 8 are incorrect in graph")
+
+    if set(graph_fragment_upper_right.vertices).isdisjoint(graph_fragment_lower_right.vertices)\
+        and not set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_lower_left.vertices):
+
         top_middle_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_right)
         bottom_middle_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_right)
 
         top_right_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_right)
         bottom_right_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_lower_right)
 
+        upper_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_left)
+
+        if None in [top_middle_vertex, bottom_middle_vertex, top_right_vertex, bottom_right_vertex, upper_left_vertex]:
+            raise Exception("Some vertex is missing")
+
+        continue_production = check_vertices_labels([top_middle_vertex, bottom_middle_vertex, top_right_vertex, bottom_right_vertex, upper_left_vertex], VertexLabel.E)
+        if not continue_production:
+            raise Exception("Vertex E labels needed for production 8 are incorrect in graph")
+
+        continue_production = check_vertices_coordinates_horizontal([(top_middle_vertex, bottom_middle_vertex),
+                                                                     (top_right_vertex, bottom_right_vertex)])
+        if not continue_production:
+            raise Exception("Vertex coordinates are wrong for 8 production")
+
         merge_vertices_to_zero_point(top_right_vertex, bottom_right_vertex, graph_fragment_list)
         merge_vertices_to_zero_point(top_middle_vertex, bottom_middle_vertex, graph_fragment_list)
 
-        upper_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_left)
         graph_fragment_modified_list = get_all_connected_graph_fragments_y_sided(graph_fragment_upper_left)
         graph_fragment_modified_list.extend(get_all_connected_graph_fragments_y_sided(graph_fragment_upper_right))
         exceptions = [top_middle_vertex.id, top_right_vertex.id]
         exceptions.extend(get_vertices_ids_to_the_bottom(upper_left_vertex))
         move_vertices_y(graph_fragment_modified_list, exceptions)
 
-    if set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_lower_left.vertices):
+    elif set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_lower_left.vertices)\
+        and not set(graph_fragment_upper_right.vertices).isdisjoint(graph_fragment_lower_right.vertices):
+
         top_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_left)
         bottom_left_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_left)
 
         top_middle_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_right)
         bottom_middle_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_right)
 
+        upper_right_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_right)
+
+        if None in [top_left_vertex, bottom_left_vertex, top_middle_vertex, bottom_middle_vertex, upper_right_vertex]:
+            raise Exception("Some vertex is missing")
+
+        continue_production = check_vertices_labels([top_left_vertex, bottom_left_vertex, top_middle_vertex, bottom_middle_vertex, upper_right_vertex], VertexLabel.E)
+        if not continue_production:
+            raise Exception("Vertex E labels needed for production 8 are incorrect in graph")
+
+        continue_production = check_vertices_coordinates_horizontal([(top_middle_vertex, bottom_middle_vertex),
+                                                                     (top_left_vertex, bottom_left_vertex)])
+        if not continue_production:
+            raise Exception("Vertex coordinates are wrong for 8 production")
+
         merge_vertices_to_zero_point(top_left_vertex, bottom_left_vertex, graph_fragment_list)
         merge_vertices_to_zero_point(top_middle_vertex, bottom_middle_vertex, graph_fragment_list)
 
-        upper_right_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_right)
         graph_fragment_modified_list = get_all_connected_graph_fragments_y_sided(graph_fragment_upper_left)
         graph_fragment_modified_list.extend(get_all_connected_graph_fragments_y_sided(graph_fragment_upper_right))
         exceptions = [top_middle_vertex.id, top_left_vertex.id]
         exceptions.extend(get_vertices_ids_to_the_bottom(upper_right_vertex))
         move_vertices_y(graph_fragment_modified_list, exceptions)
 
-    if set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_upper_right.vertices):
+    elif set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_upper_right.vertices)\
+        and not set(graph_fragment_lower_left.vertices).isdisjoint(graph_fragment_lower_right.vertices):
+
         top_left_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_upper_left)
         top_right_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_upper_right)
 
         middle_left_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_left)
         middle_right_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_right)
 
+        bottom_left_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_lower_left)
+
+        if None in [top_left_vertex, top_right_vertex, middle_left_vertex, middle_right_vertex, bottom_left_vertex]:
+            raise Exception("Some vertex is missing")
+
+        continue_production = check_vertices_labels([top_left_vertex, top_right_vertex, middle_left_vertex, middle_right_vertex, bottom_left_vertex], VertexLabel.E)
+        if not continue_production:
+            raise Exception("Vertex E labels needed for production 8 are incorrect in graph")
+
+        continue_production = check_vertices_coordinates_vertical([(top_left_vertex, top_right_vertex),
+                                                                   (middle_left_vertex, middle_right_vertex)])
+        if not continue_production:
+            raise Exception("Vertex coordinates are wrong for 8 production")
+
         merge_vertices_to_zero_point(top_left_vertex, top_right_vertex, graph_fragment_list)
         merge_vertices_to_zero_point(middle_left_vertex, middle_right_vertex, graph_fragment_list)
 
-        bottom_left_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_lower_left)
         graph_fragment_modified_list = get_all_connected_graph_fragments_x_sided(graph_fragment_upper_left)
         graph_fragment_modified_list.extend(get_all_connected_graph_fragments_x_sided(graph_fragment_lower_left))
         exceptions = [middle_left_vertex.id, top_left_vertex.id]
         exceptions.extend(get_vertices_ids_to_the_right(bottom_left_vertex))
         move_vertices_x(graph_fragment_modified_list, exceptions)
 
-    if set(graph_fragment_lower_left.vertices).isdisjoint(graph_fragment_lower_right.vertices):
+    elif set(graph_fragment_lower_left.vertices).isdisjoint(graph_fragment_lower_right.vertices)\
+        and not set(graph_fragment_upper_left.vertices).isdisjoint(graph_fragment_upper_right.vertices):
+
         middle_left_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_left)
         middle_right_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_right)
 
         bottom_left_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_lower_left)
         bottom_right_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_lower_right)
 
+        top_left_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_upper_left)
+
+        if None in [middle_left_vertex, middle_right_vertex, bottom_left_vertex, bottom_right_vertex, top_left_vertex]:
+            raise Exception("Some vertex is missing")
+
+        continue_production = check_vertices_labels([middle_left_vertex, middle_right_vertex, bottom_left_vertex, bottom_right_vertex, top_left_vertex], VertexLabel.E)
+        if not continue_production:
+            raise Exception("Vertex E labels needed for production 8 are incorrect in graph")
+
+        continue_production = check_vertices_coordinates_vertical([(middle_left_vertex, middle_right_vertex),
+                                                                   (bottom_left_vertex, bottom_right_vertex)])
+        if not continue_production:
+            raise Exception("Vertex coordinates are wrong for 8 production")
+
         merge_vertices_to_zero_point(middle_left_vertex, middle_right_vertex, graph_fragment_list)
         merge_vertices_to_zero_point(bottom_left_vertex, bottom_right_vertex, graph_fragment_list)
 
-        top_left_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_upper_left)
         graph_fragment_modified_list = get_all_connected_graph_fragments_x_sided(graph_fragment_upper_left)
         graph_fragment_modified_list.extend(get_all_connected_graph_fragments_x_sided(graph_fragment_lower_left))
         exceptions = [middle_left_vertex.id, bottom_left_vertex.id]
         exceptions.extend(get_vertices_ids_to_the_right(top_left_vertex))
         move_vertices_x(graph_fragment_modified_list, exceptions)
+    else:
+        raise Exception("Graph is wrongly configured")
 
     if graph_fragment_modified_list != None:
         graph_fragment_list.extend(graph_fragment_modified_list)

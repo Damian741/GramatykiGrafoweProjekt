@@ -6,10 +6,99 @@ from util.SortUtils import sort_graph_fragments
 def P11(id1, id2, id3):
     global verticies_graph_fragment
     global graph_fragment_list
+    id1_middle_vertex = verticies_graph_fragment.get(id1).middle_vertex
+    id2_middle_vertex = verticies_graph_fragment.get(id2).middle_vertex
+    id3_middle_vertex = verticies_graph_fragment.get(id3).middle_vertex
+
+    if id1_middle_vertex.x < id2_middle_vertex.x == id3_middle_vertex.x:
+        P11_vertical_merge_bigger_square_on_left(id1, id2, id3)
+
+    if id1_middle_vertex.x == id3_middle_vertex.x < id2_middle_vertex.x:
+        P11_vertical_merge_bigger_square_on_right(id1, id2, id3)
+
+    if id1_middle_vertex.y == id2_middle_vertex.y > id3_middle_vertex.y:
+        P11_horizontal_merge_bigger_square_on_bottom(id1, id2, id3)
+
+    if id1_middle_vertex.y > id2_middle_vertex.y == id3_middle_vertex.y:
+        P11_horizontal_merge_bigger_square_on_top(id1, id2, id3)
+
+
+def P11_horizontal_merge_bigger_square_on_bottom(id1, id2, id3):
+    global verticies_graph_fragment
+    global graph_fragment_list
+    graph_fragment_bigger_down = verticies_graph_fragment.get(id3)
     graph_fragment_upper_left = verticies_graph_fragment.get(id1)
     graph_fragment_upper_right = verticies_graph_fragment.get(id2)
+
+    top_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_left)
+    top_right_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_right)
+
+    bottom_right_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_bigger_down)
+    bottom_left_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_bigger_down)
+
+    y_translation = top_left_vertex.y - bottom_left_vertex.y
+
+    merge_vertices_to_zero_point(top_left_vertex, bottom_left_vertex, graph_fragment_list)
+
+    merge_vertices_to_zero_point(top_right_vertex, bottom_right_vertex, graph_fragment_list)
+
+    graph_fragment_modified_list = get_all_connected_graph_fragments_y_sided(graph_fragment_bigger_down)
+    vertexes_to_move = graph_fragment_bigger_down.vertices
+    for fragment in graph_fragment_modified_list:
+        vertexes_to_move += fragment.vertices
+
+    vertexes_to_move = list(dict.fromkeys(vertexes_to_move))
+
+    to_remove = []
+    to_remove_ids = [top_left_vertex.id, top_right_vertex.id]
+    for v in vertexes_to_move:
+        if v.id in to_remove_ids:
+            to_remove.append(v)
+    for v in to_remove:
+        if v in vertexes_to_move:
+            vertexes_to_move.remove(v)
+    for vertex in vertexes_to_move:
+        vertex.y += y_translation
+
+
+def P11_vertical_merge_bigger_square_on_right(id1, id2, id3):
+    global verticies_graph_fragment
+    global graph_fragment_list
+    graph_fragment_bigger_right = verticies_graph_fragment.get(id2)
+    graph_fragment_upper_left = verticies_graph_fragment.get(id1)
     graph_fragment_lower_left = verticies_graph_fragment.get(id3)
-    P11_vertical_merge_bigger_square_on_left(id1, id2, id3)
+
+    top_left_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_upper_left)
+    bottom_left_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_lower_left)
+
+    top_right_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_bigger_right)
+    bottom_right_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_bigger_right)
+
+    x_translation = top_left_vertex.x - top_right_vertex.x
+
+    merge_vertices_to_zero_point(top_left_vertex, top_right_vertex, graph_fragment_list)
+
+    merge_vertices_to_zero_point(bottom_left_vertex, bottom_right_vertex, graph_fragment_list)
+
+    graph_fragment_modified_list = get_all_connected_graph_fragments_x_sided(graph_fragment_bigger_right)
+    vertexes_to_move = graph_fragment_bigger_right.vertices
+    for fragment in graph_fragment_modified_list:
+        vertexes_to_move += fragment.vertices
+
+    vertexes_to_move = list(dict.fromkeys(vertexes_to_move))
+
+    to_remove = []
+    to_remove_ids = [top_left_vertex.id, bottom_left_vertex.id]
+    for v in vertexes_to_move:
+        if v.id in to_remove_ids:
+            to_remove.append(v)
+
+    for v in to_remove:
+        if v in vertexes_to_move:
+            vertexes_to_move.remove(v)
+
+    for vertex in vertexes_to_move:
+        vertex.x += x_translation
 
 
 def P11_vertical_merge_bigger_square_on_left(id1, id2, id3):
@@ -66,9 +155,56 @@ def P11_vertical_merge_bigger_square_on_left(id1, id2, id3):
         vertex.x += x_translation
 
 
+def P11_horizontal_merge_bigger_square_on_top(id1, id2, id3):
+    global verticies_graph_fragment
+    global graph_fragment_list
+    graph_fragment_bigger_top = verticies_graph_fragment.get(id1)
+    graph_fragment_lower_left = verticies_graph_fragment.get(id2)
+    graph_fragment_lower_right = verticies_graph_fragment.get(id3)
+
+    top_left_vertex = get_lower_left_vertice_in_graph_fragment(graph_fragment_bigger_top)
+    top_right_vertex = get_lower_right_vertice_in_graph_fragment(graph_fragment_bigger_top)
+
+    bottom_left_vertex = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_left)
+    bottom_middle_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_lower_left)
+    bottom_rigth_vertex = get_upper_right_vertice_in_graph_fragment(graph_fragment_lower_right)
+
+    y_translation = top_left_vertex.y - bottom_left_vertex.y
+
+    merge_vertices_to_zero_point(top_left_vertex, bottom_left_vertex, graph_fragment_list)
+
+    merge_vertices_to_zero_point(top_right_vertex, bottom_rigth_vertex, graph_fragment_list)
+
+    incorporate_vertex_to_edge(bottom_middle_vertex, graph_fragment_bigger_top, top_left_vertex, top_right_vertex)
+
+    graph_fragment_modified_list = get_all_connected_graph_fragments_y_sided(graph_fragment_lower_left)
+    graph_fragment_modified_list.extend(get_all_connected_graph_fragments_y_sided(graph_fragment_lower_right))
+
+    vertexes_to_move = graph_fragment_lower_left.vertices
+    vertexes_to_move += graph_fragment_lower_right.vertices
+
+    for fragment in graph_fragment_modified_list:
+        vertexes_to_move += fragment.vertices
+
+    vertexes_to_move = list(dict.fromkeys(vertexes_to_move))
+
+    to_remove = []
+    to_remove_ids = [top_left_vertex.id, bottom_middle_vertex.id, top_right_vertex.id]
+    for v in vertexes_to_move:
+        if v.id in to_remove_ids:
+            to_remove.append(v)
+
+    for v in to_remove:
+        if v in vertexes_to_move:
+            vertexes_to_move.remove(v)
+    for vertex in vertexes_to_move:
+        vertex.y += y_translation
+
+
 def incorporate_vertex_to_edge(incorporated_vertex: Vertex, incorporating_graph: GraphFragment,
                                vertex_1_in_incorporating_graph: Vertex, vertex_2_in_incorporating_graph: Vertex):
     incorporated_vertex.x = (vertex_1_in_incorporating_graph.x + vertex_2_in_incorporating_graph.x) / 2
+    incorporated_vertex.y = (vertex_1_in_incorporating_graph.y + vertex_2_in_incorporating_graph.y) / 2
     edge_to_delete_1 = (vertex_1_in_incorporating_graph.id, vertex_2_in_incorporating_graph.id)
     edge_to_delete_2 = (vertex_2_in_incorporating_graph.id, vertex_1_in_incorporating_graph.id)
 

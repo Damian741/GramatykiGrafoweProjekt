@@ -31,45 +31,99 @@ def P9(id1, id2, id3, id4):
         and not set(graph_fragment_lower_right.vertices).isdisjoint(graph_fragment_lower_left.vertices)
     ):
         print("Mogę być użyty")
-        middle_upper_right = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_left)
-        middle_lower_right = get_upper_right_vertice_in_graph_fragment(graph_fragment_lower_left)
-        if middle_upper_right is not middle_lower_right:
-            print("Wspólny wierzchołek jest różny po lewej stronie")
+        # TODO add more checks?
+        ## Sprawdzenie w którą stronę sklejamy, w pionie:
+        if (
+            graph_fragment_upper_left.middle_vertex.x == graph_fragment_upper_right.middle_vertex.x - 2
+            and graph_fragment_lower_left.middle_vertex.x == graph_fragment_lower_right.middle_vertex.x - 2
+        ):
+            print("Przesunięcie w poziomie")
 
-        middle_upper_left = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_right)
-        middle_lower_left = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_right)
-        if middle_upper_left is not middle_lower_left:
-            print("Wspólny wierzchołek jest różny po prawej stronie")
-        
-        if middle_upper_right is not middle_lower_left:
-            print("Rozdzielne")
+            ## wierzchołek wspólny dla lewej części podgrafów 
+            middle_upper_right = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_left)
+            middle_lower_right = get_upper_right_vertice_in_graph_fragment(graph_fragment_lower_left)
+            if middle_upper_right is not middle_lower_right:
+                raise Exception("Middle vertex on right side is not connected")
 
-        merge_vertices_to_zero_point(middle_upper_right, middle_upper_left, graph_fragment_list)
+            ## wierzchołek wspólny dla prawej części podgrafów 
+            middle_upper_left = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_right)
+            middle_lower_left = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_right)
+            if middle_upper_left is not middle_lower_left:
+                raise Exception("Middle vertex on left side is not connected")
+            
+            print(f"Do połączenia: {middle_lower_left.id} z {middle_upper_right.id}")
 
-        # TODO sprawdzanie jeszcze co gdy nasze przesunięcie jest w górę,
-        # aktualny obsługiwany przypadek to sytuacja gdy przesunięcie jest w prawo, patrz ../idea_sketches/P9_case.jpg
-        # dodać if sprawdzający czy upper_left.x != upper_right.x - 1 => występuje przesunięcie w prawo?
-        # if upper_left.y != lower_left.y - 1 => występuje przesunięcie w dół?
-        graph_fragment_modified_list = get_all_connected_graph_fragments_x_sided(graph_fragment_upper_left)
-        graph_fragment_modified_list.extend(get_all_connected_graph_fragments_x_sided(graph_fragment_lower_left))
+            ## mergujemy
+            merge_vertices_to_zero_point(middle_upper_right, middle_upper_left, graph_fragment_list)
+            ## pobranie podgrafów na prawo od lewego górnego (do przesunięcia)
+            graph_fragment_modified_list = get_all_connected_graph_fragments_x_sided(graph_fragment_upper_left)
+            ## rozszerzenie o podgrafy na prawo od lewego dolnego
+            graph_fragment_modified_list.extend(get_all_connected_graph_fragments_x_sided(graph_fragment_lower_left))
 
-        vertice_left_upper = get_upper_right_vertice_in_graph_fragment(graph_fragment_upper_left)
-        vertice_left_lower = get_lower_right_vertice_in_graph_fragment(graph_fragment_lower_left)
-        exceptions = [vertice_left_upper.id, vertice_left_lower.id, middle_upper_right.id] # [middle_upper_right.id]
-        exceptions.extend(get_vertices_ids_to_the_right(vertice_left_upper))
-        exceptions.extend(get_vertices_ids_to_the_right(vertice_left_lower))
+            ## wyznaczenie vertexów które nie są przesuwane
+            vertice_left_upper = get_upper_right_vertice_in_graph_fragment(graph_fragment_upper_left)
+            vertice_left_lower = get_lower_right_vertice_in_graph_fragment(graph_fragment_lower_left)
+            exceptions = [vertice_left_upper.id, vertice_left_lower.id, middle_upper_right.id]
+            exceptions.extend(get_vertices_ids_to_the_right(vertice_left_upper))
+            exceptions.extend(get_vertices_ids_to_the_right(vertice_left_lower))
 
-        # przesuń wszystkie wierzchołki na prawo od łączenia, po za tymi które sa już poprawne
-        for subgraph in graph_fragment_modified_list:
-            for vertice in subgraph.vertices:
-                if vertice.id not in exceptions:
-                    vertice.x -= 1
-                    exceptions.append(vertice.id)
+            # przesuń wszystkie wierzchołki na prawo od łączenia, po za tymi które sa już poprawne
+            for subgraph in graph_fragment_modified_list:
+                for vertice in subgraph.vertices:
+                    if vertice.id not in exceptions:
+                        vertice.x -= 1
+                        exceptions.append(vertice.id)
 
 
-        graph_fragment_modified_list = get_all_connected_graph_fragments_y_sided(graph_fragment_upper_left)
-        for i in graph_fragment_modified_list:
-            print(i.middle_vertex.id)
+            graph_fragment_modified_list = get_all_connected_graph_fragments_y_sided(graph_fragment_upper_left)
+            # for i in graph_fragment_modified_list:
+            #     print(i.middle_vertex.id)
+
+            # TODO add more checks?
+        elif (
+            graph_fragment_upper_left.middle_vertex.y == graph_fragment_lower_left.middle_vertex.y + 2
+            and graph_fragment_upper_right.middle_vertex.y == graph_fragment_lower_right.middle_vertex.y + 2
+        ):
+            print("Przesunięcie w pionie?")
+            middle_upper_left = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_left)
+            middle_upper_right = get_lower_left_vertice_in_graph_fragment(graph_fragment_upper_right)
+            if middle_upper_left is not middle_upper_right:
+                raise Exception("Middle vertex on upper side is not connected")
+
+            middle_lower_left = get_upper_right_vertice_in_graph_fragment(graph_fragment_lower_left)
+            middle_lower_right = get_upper_left_vertice_in_graph_fragment(graph_fragment_lower_right)
+            if middle_lower_right is not middle_lower_left:
+                raise Exception("Middle vertex on lower side is not connected")
+
+            if middle_upper_left is not middle_lower_left:
+                print(f"Do połączenia: {middle_upper_left.id} z {middle_lower_left.id}")
+
+            merge_vertices_to_zero_point(middle_upper_left, middle_lower_left, graph_fragment_list)
+
+            ## pobranie podgrafów na dół od lewego górnego (do przesunięcia)
+            graph_fragment_modified_list = get_all_connected_graph_fragments_y_sided(graph_fragment_upper_left)
+            ## rozszerzenie o podgrafy na dół od prawego górnego
+            graph_fragment_modified_list.extend(get_all_connected_graph_fragments_y_sided(graph_fragment_upper_right))
+
+            ## wyznaczenie vertexów które nie są przesuwane
+            vertice_left_upper = get_upper_left_vertice_in_graph_fragment(graph_fragment_upper_left)
+            vertice_right_upper = get_lower_right_vertice_in_graph_fragment(graph_fragment_upper_right)
+            exceptions = [vertice_left_upper.id, vertice_right_upper.id, middle_upper_left.id]
+            exceptions.extend(get_vertices_ids_to_the_bottom(vertice_left_upper))
+            exceptions.extend(get_vertices_ids_to_the_bottom(vertice_right_upper))
+
+            # przesuń wszystkie wierzchołki do góry od łączenia, po za tymi które sa już poprawne
+            for subgraph in graph_fragment_modified_list:
+                for vertice in subgraph.vertices:
+                    if vertice.id not in exceptions:
+                        vertice.y += 1
+                        exceptions.append(vertice.id)
+
+
+        else:
+            raise Exception("Graph is wrongly configured")
+    else:
+        raise Exception("Graph is wrongly configured")
 
 
 def merge_vertices_to_zero_point(strong_vertex: Vertex, deleted_vertex: Vertex, graph_fragment_list: List[GraphFragment]):

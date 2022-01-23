@@ -1,8 +1,8 @@
 from typing import List
 from common import *
+from data.VertexLabel import VertexLabel
 
 
-## TODO walidacja czy graf lewej strony wygląda tak jak powinien, czyli czy są wszystkie krawędzie, oraz etykiety się zgadzają
 def P9(id1, id2, id3, id4):
     global verticies_graph_fragment
     global graph_fragment_list
@@ -47,6 +47,12 @@ def P9(id1, id2, id3, id4):
             and graph_fragment_lower_left.middle_vertex.x
             == graph_fragment_lower_right.middle_vertex.x - 2
         ):
+            validate_graph(
+                graph_fragment_upper_left,
+                graph_fragment_upper_right,
+                graph_fragment_lower_left,
+                graph_fragment_lower_right,
+            )
             middle_upper_right = get_lower_right_vertice_in_graph_fragment(
                 graph_fragment_upper_left
             )
@@ -103,6 +109,13 @@ def P9(id1, id2, id3, id4):
             and graph_fragment_upper_right.middle_vertex.y
             == graph_fragment_lower_right.middle_vertex.y + 2
         ):
+            validate_graph(
+                graph_fragment_upper_right,
+                graph_fragment_lower_right,
+                graph_fragment_upper_left,
+                graph_fragment_lower_left,
+                orient="V",
+            )
             print("Przesunięcie w pionie?")
             middle_upper_left = get_lower_right_vertice_in_graph_fragment(
                 graph_fragment_upper_left
@@ -160,6 +173,182 @@ def P9(id1, id2, id3, id4):
             raise Exception("Graph is wrongly configured")
     else:
         raise Exception("Graph is wrongly configured")
+
+
+## podajemy podgrafy tak aby zszywanie było pionowe (rozłączone prawo-lewo)
+def validate_graph(
+    graph_fragment_upper_left,
+    graph_fragment_upper_right,
+    graph_fragment_lower_left,
+    graph_fragment_lower_right,
+    orient="H",
+):
+    print("Validate")
+    check_vertex_labels(
+        [
+            graph_fragment_upper_left.middle_vertex,
+            graph_fragment_upper_right.middle_vertex,
+            graph_fragment_lower_left.middle_vertex,
+            graph_fragment_lower_right.middle_vertex,
+        ],
+        VertexLabel.I,
+    )
+
+    if orient == "H":
+        ## ten wierzchołek powinien być wspólny dla lewego i prawego górnego podgrafu
+        upper_left_vertex = get_upper_right_vertice_in_graph_fragment(
+            graph_fragment_upper_left
+        )
+        ## wspólny dla lewego i prawego dolnego podgrafu
+        lower_left_vertex = get_lower_right_vertice_in_graph_fragment(
+            graph_fragment_lower_left
+        )
+        ## wspólny dla lewego górnego i dolnego podgrafu
+        middle_left_vertex = get_upper_right_vertice_in_graph_fragment(
+            graph_fragment_lower_left
+        )
+        ## wspólny dla prawego górnego i dolnego podgrafu
+        middle_right_vertex = get_upper_left_vertice_in_graph_fragment(
+            graph_fragment_lower_right
+        )
+    elif orient == "V":
+        upper_left_vertex = get_lower_right_vertice_in_graph_fragment(
+            graph_fragment_upper_left
+        )
+        lower_left_vertex = get_lower_left_vertice_in_graph_fragment(
+            graph_fragment_lower_left
+        )
+        middle_left_vertex = get_lower_right_vertice_in_graph_fragment(
+            graph_fragment_lower_left
+        )
+        middle_right_vertex = get_upper_right_vertice_in_graph_fragment(
+            graph_fragment_lower_right
+        )
+
+    check_lower_level_edges(
+        upper_left_vertex, graph_fragment_upper_left, graph_fragment_upper_right
+    )
+    check_lower_level_edges(
+        lower_left_vertex, graph_fragment_lower_left, graph_fragment_lower_right
+    )
+    check_lower_level_edges(
+        middle_left_vertex, graph_fragment_lower_left, graph_fragment_upper_left
+    )
+    check_lower_level_edges(
+        middle_right_vertex, graph_fragment_lower_right, graph_fragment_upper_right
+    )
+
+    check_vertex_labels(
+        [upper_left_vertex, lower_left_vertex, middle_left_vertex, middle_right_vertex],
+        VertexLabel.E,
+    )
+    left_upper_id = graph_fragment_upper_left.middle_vertex.id
+    left_lower_id = graph_fragment_lower_left.middle_vertex.id
+    right_upper_id = graph_fragment_upper_right.middle_vertex.id
+    right_lower_id = graph_fragment_lower_right.middle_vertex.id
+    left_childs = [left_upper_id, left_lower_id]
+    right_childs = [right_upper_id, right_lower_id]
+    left_parent_edges = []
+    right_parent_edges = []
+
+    # search for parent for I vertices
+    for id1, id2 in inter_layer_connections:
+        if id1 in left_childs or id2 in left_childs:
+            left_parent_edges.append((id1, id2))
+        elif id1 in right_childs or id2 in right_childs:
+            right_parent_edges.append((id1, id2))
+
+    left_parent_id = check_parent_edges(left_parent_edges, left_upper_id, left_lower_id)
+    right_parent_id = check_parent_edges(
+        right_parent_edges, right_upper_id, right_lower_id
+    )
+    for graph_fragment in graph_fragment_list:
+        if graph_fragment.middle_vertex.id == left_parent_id:
+            left_parent_graph_fragment = graph_fragment
+        elif graph_fragment.middle_vertex.id == right_parent_id:
+            right_parent_graph_fragment = graph_fragment
+    if None in [left_parent_graph_fragment, right_parent_graph_fragment]:
+        raise Exception("Parent/s for left or right side not found")
+    check_vertex_labels(
+        [
+            left_parent_graph_fragment.middle_vertex,
+            right_parent_graph_fragment.middle_vertex,
+        ],
+        VertexLabel.i,
+    )
+    intersection = set(left_parent_graph_fragment.vertices).intersection(
+        right_parent_graph_fragment.vertices
+    )
+    if not any([vertex.label == VertexLabel.E for vertex in intersection]):
+        raise Exception("Parents not connected by vertex with E label")
+    if not any(
+        check_edges(
+            intersection,
+            left_parent_graph_fragment.middle_vertex,
+            left_parent_graph_fragment,
+        )
+    ) or not any(
+        check_edges(
+            intersection,
+            left_parent_graph_fragment.middle_vertex,
+            left_parent_graph_fragment,
+        )
+    ):
+        raise Exception("Parents not connected by edges with vertex with E label")
+
+
+def check_edges(vertices, parent, graph_fragment):
+    return [
+        (vertex.id, parent.id) in graph_fragment.edges
+        or (parent.id, vertex.id) in graph_fragment.edges
+        for vertex in vertices
+    ]
+
+
+def check_lower_level_edges(vertex, graph_fragment_base, graph_fragment_other):
+    if (
+        vertex not in graph_fragment_other.vertices
+        or not any(
+            check_edges(
+                [vertex], graph_fragment_base.middle_vertex, graph_fragment_base
+            )
+        )
+        or not any(
+            check_edges(
+                [vertex], graph_fragment_other.middle_vertex, graph_fragment_other
+            )
+        )
+    ):
+        raise Exception(
+            f"{graph_fragment_base.middle_vertex.id} and {graph_fragment_other.middle_vertex.id} dont have connected vertice with {vertex.id}"
+        )
+
+
+def check_parent_edges(parent_edges, upper_id, lower_id):
+    if len(parent_edges) != 2:
+        raise Exception(
+            f"There is {len(parent_edges)} edges connected with {upper_id} or/and {lower_id}. Should be only 2"
+        )
+    for id1, id2 in parent_edges:
+        if id1 == upper_id:
+            upper_parent = id2
+        elif id2 == upper_id:
+            upper_parent = id1
+        elif id1 == lower_id:
+            lower_parent = id2
+        elif id2 == lower_id:
+            lower_parent = id1
+    if upper_parent != lower_parent:
+        raise Exception(
+            f"Graph fragment {lower_id} and {upper_id} have diffrent parents: {upper_parent} and {lower_parent}"
+        )
+    return upper_parent
+
+
+def check_vertex_labels(vertexes, label):
+    for vertex in vertexes:
+        if not vertex.label == label:
+            raise Exception(f"Vertex {vertex.id} has diffrent label then {label}")
 
 
 def merge_vertices_to_zero_point(

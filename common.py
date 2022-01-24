@@ -1,9 +1,7 @@
 import math
 from typing import List, Tuple
-from data.Square import Square
-from data.Vertex import Vertex
-from data.GraphFragment import GraphFragment
-from data.VertexLabel import VertexLabel
+
+from data import *
 
 """
 _BETWEEN_LAYER_BUFFER - constant value which defines space between given graph layers

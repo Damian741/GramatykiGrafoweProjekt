@@ -1,14 +1,13 @@
-"""
-Class representing a vertex. It has its coordinates (x, y), unique id and label (from VertexLabel enum).
-"""
+from dataclasses import dataclass
 
+from . import VertexLabel
 
-from data.VertexLabel import VertexLabel
-
-
+@dataclass (init=True, repr=True, unsafe_hash=True)
 class Vertex:
-    def __init__(self, x: int, y: int, id: int, label: VertexLabel):
-        self.x = x
-        self.y = y
-        self.id = id
-        self.label = label
+    """
+Class representing a vertex. It has its coordinates (x, y), unique id and label (from VertexLabel enum).
+    """
+    x: int
+    y: int
+    id: int
+    label: VertexLabel

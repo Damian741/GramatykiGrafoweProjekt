@@ -59,21 +59,6 @@ def P9 (id1: int, id2: int, id3: int, id4: int, verticies_graph_fragment: Dict =
         if middle_upper_right is not middle_lower_right:
             raise Exception("Middle vertex on right side is not connected")
 
-    if (
-        graph_fragment_upper_left.middle_vertex.x
-        == graph_fragment_upper_right.middle_vertex.x - 2
-        and graph_fragment_lower_left.middle_vertex.x
-        == graph_fragment_lower_right.middle_vertex.x - 2
-    ):
-        middle_upper_right = get_lower_right_vertice_in_graph_fragment(
-            graph_fragment_upper_left
-        )
-        middle_lower_right = get_upper_right_vertice_in_graph_fragment(
-            graph_fragment_lower_left
-        )
-        if middle_upper_right is not middle_lower_right:
-            raise Exception("Middle vertex on right side is not connected")
-
         middle_upper_left = get_lower_left_vertice_in_graph_fragment(
             graph_fragment_upper_right
         )
@@ -402,8 +387,8 @@ def check_parent_edges(parent_edges, upper_id, lower_id):
     return upper_parent
 
 
-def check_vertex_labels(vertexes, label):
-    for vertex in vertexes:
+def check_vertex_labels(vertice, label):
+    for vertex in vertice:
         if not vertex.label == label:
             raise Exception(f"Vertex {vertex.id} has diffrent label then {label}")
 

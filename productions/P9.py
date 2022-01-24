@@ -85,6 +85,16 @@ def P9 (id1: int, id2: int, id3: int, id4: int, verticies_graph_fragment: Dict =
 
         print(f"Do połączenia: {middle_lower_left.id} z {middle_upper_right.id}")
 
+        merge_vertices_to_zero_point(
+            middle_upper_right, middle_upper_left, graph_fragment_list
+        )
+        graph_fragment_modified_list = get_all_connected_graph_fragments_x_sided(
+            graph_fragment_upper_left
+        )
+        graph_fragment_modified_list.extend(
+            get_all_connected_graph_fragments_x_sided(graph_fragment_lower_left)
+        )
+
         vertice_left_upper = get_upper_right_vertice_in_graph_fragment(
             graph_fragment_upper_left
         )
